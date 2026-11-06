@@ -11,4 +11,4 @@ Un cop s'hagi acabat d'editar els nous fitxers i s'hagin desat, s'escriu:
     git commit -m "Add new files"
     git push
 
-Això penja els arxius que s'ha fet
+Això penja els arxius que s'ha fetgit
