@@ -14,7 +14,7 @@ $$P=\frac{V_0^2 S \sigma}{2h}$$
 Podem deduïr fàcilment que $P_{ext}= \frac P {\text{Volum}}=\frac{V_0^2 S \sigma}{2 h^2 S}= \frac{V_0^2 \sigma}{2 h^2}$
 
 
-$$\nabla^2 T= \frac{1}{r} \frac \partial {\partial r} \left(r \frac{\partial T}{\parital r} \right)+ \frac 1 {r^2} \frac{\partial^2 T}{\partial \phi^2} + \frac{\partial^2 T}{\partial z^2}$$
+$$\nabla^2 T= \frac{1}{r} \frac \partial {\partial r} \left(r \frac{\partial T}{\partial r} \right)+ \frac 1 {r^2} \frac{\partial^2 T}{\partial \phi^2} + \frac{\partial^2 T}{\partial z^2}$$
 Sabem que no depèn del radi ni de l'angle. així que:
 $$\nabla^2 T= \partial_z^2 T$$
 
