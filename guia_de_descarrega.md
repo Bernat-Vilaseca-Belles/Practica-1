@@ -1,7 +1,7 @@
 Com actuar amb vs code amb el github: <br>
 Primer. obrir repositori. Comprovar que s'està a la carpeta correcta. Després, incertir al terminal:
 
-    git status
+    git pull
 
 Això afegeix els nous fitxers.<br>
 Després, editar el que s'hagi d'editar. <br>
