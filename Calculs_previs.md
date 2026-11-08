@@ -28,12 +28,12 @@ Fem les següents anomenacions:
     - $t' = \frac t {t_0}$
 
 Denotem  que $\alpha= \frac{k}{c_v \rho}$. Operant, arribem:
-$$\frac{\partial T'}{\partial t'} = \textcolor{blue}{\alpha \frac{t_0}{L_0^2}} \frac{\partial^2 T'}{\partial z'^2}+ \textcolor{green}{\frac{t_0 \alpha}{t_0 k}\frac{V'}{2h^2}}$$
+$$\frac{\partial T'}{\partial t'} = \textcolor{blue}{\alpha \frac{t_0}{L_0^2}} \frac{\partial^2 T'}{\partial z'^2}+ \textcolor{green}{\frac{t_0 \alpha}{T_0 k}\frac{V'}{2h^2}}$$
 
 Aquí podem fer diverses suposicions per tal de normalitzar-ho. S'han de fer 3, i es pot escollir què suposar. Serveix per determinar el valor dels paràmetres $t_0, T_0, L_0$.<br>
 Nosaltres escollim que $L_0 =h$ i que la totalitat dels termes en blau i en verd sigui 1.
 Així ens queda:
-$$L_0 =h; \quad T_0 = \frac k {\sigma V_0^2}; \quad t_0=\frac{h^2 c_v \rho}{k}$$
+$$L_0 =h; \quad T_0 = \frac {\sigma V_0^2}{2k}; \quad t_0=\frac{h^2 c_v \rho}{k}$$
 $$\boxed{\partial_{t'} T= \partial^2_{z'} T + 1}$$
 Aquí veiem que el terme $q(z,t)$ de l'anex del document enunciat és constant en el temps i en l'espai.
 

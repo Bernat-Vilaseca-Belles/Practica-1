@@ -1,56 +1,57 @@
 import numpy as np
 import math
 import constants as const
+import matplotlib.pyplot as plt
 
-fitxer = open("Resultats ER.txt", "w") #Fitxer on es guardaran els resultats de les simulacions.
+# fitxer = open("Resultats ER.txt", "w") #Fitxer on es guardaran els resultats de les simulacions.
 
 #En aquest codi s'ha calculat respecte a les funcions normalitzades. A raó d'això, cal tenir en compte els valors dels coeficients de normalització. En aquest cas, s'ha utilitzat la funció de normalització de la distribució normal, que és 1/(sigma*sqrt(2*pi)), on sigma és la desviació estàndard. Això significa que els valors dels coeficients de normalització i els valors de les constants.
 
-#Càlcul de les constants de normalització necessàries:
+#Càlcul de les variables necessàries.:
 tau = (36.5+273)/const.T_0 #Temperatura inicial normalitzada. tau=T(t=0)/T_0, T_0= k/sigma*(V_0**2).
-T_M = (80+273)/const.T_0 #temperatura 80º normalitzada.
-T_m = (50 +273)/const.T_0 #temperatura 50º normalitzada.
 
 #Comencem establint les dades de la discratització:
 N=101
 delta_z = 1/(N-1) #valor de la discretització espacial normalitzada. delta_z'= h/(L_0*N). L_0=h ==> delta_z'=1/N.
 delta_t= (0.51*(delta_z**2), 0.49*(delta_z**2), 0.25*(delta_z**2)) #Conjunt de valors de les diferents discretitzacions temporals.
-gamma= [(o/(delta_z**2)) for o in delta_t] #coficient
-j_1= math.ceil(0.0075/const.L_0/delta_z) -1 #Punt de la component z on comença la zona malalta. Utilitzem math.ceil per arrodonir a l'alça. Així ens assegurem que estem dins de la regió malalta.
-j_2= math.floor(0.0125/const.L_0/delta_z) -1 #Punt de la component z on acaba la zona malalta. Utilitzem math.floor per arrodonir a la baixa. Així ens assegurem que estem dins de la regió malalta.
+gamma= [0.51,0.49,0.25] #coficient
+t_a=0.025
+p=np.ones(3)
+for i in range(3): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza la simulació.
+
 
 #Elements per imprimir els resultats:
 foxtrot = np.ones(3) #Llista de temps que ha aguantat el teixit en les condicions correctes per a cada discretització. Nom escollit a l'atzar.
 
-for p in range(3): #per cada delta_t i gamma.
-    #Establim les condicions inicials:
-    phi = tau*np.ones(N) #Temperatura normalitzada a t=0 s
-    charlie= phi #Nom aleatori per al càlcul de la temperatura a la següent iteració.
-    b_1, b_2 =True, True #Conjunt de boleans per a les operacions
-    # comptador_1 =0 #nombre d'iteracions a partir de la qual la zona malalta supera la temperatura de 50ºC.
-    comptador_2 =0 #nombre d'iteracions fins que la zona sana supera els 50ºC o algun punt supera els 80ºC.
-    while b_1 and b_2:
+def calcul_temperatura(T0, dz, N, p, g):
+    phi = T0*np.ones(N)
+    charlie= T0*np.ones(N)
+    for i in range(int(p)):
         for j in range(1, N-1):
-            charlie[j+1] = phi[j] + gamma[p]*(phi[j+1]- (2*phi[j])+ phi[j-1] + (delta_z**2)) #Càlcul de la següent iteració de la temperatura en funció del temps.
-        phi =charlie
-        if max(phi)> T_M:
-            b_1=False
-        daca = phi[j_1:j_2] #Nom aleatori per denominar els punts de la zona malalta.
-        eco=np.append(phi[:(j_1-1)], phi[(j_2+1):]) #Nom aleatori per denominar els punts de la zona sana
-        # if (min(daca) > T_m) and b_1: #Si la temperatura de la zona malalta supera els 50ºC, comencem a comptar quan temps passa.
-            # comptador_1+=1 
-        if (max(eco) > T_m) and b_1: #Si la temperatura de la zona sana supera els 50ºC, s'atura la simulació.
-            b_2=False
-        comptador_2+=1 
-    foxtrot[p]=(comptador_2-1)*delta_t[p]*const.t_0 #Temps no normalitzat que ha aguantat el teixit en la discretització p+1.
+            charlie[j] = phi[j] + g*(phi[j+1]- (2*phi[j])+ phi[j-1] + (dz**2))
+        for j in range(1,N-1): phi[j] =charlie[j] 
+    T=np.ones(N)
+    for j in range(N):
+        T[j]=phi[j]*const.T_0-273
+    return T
 
-print("*****\nResultats de les 3 simulacions:\n")
-print("Temps de resistència del teixit per a discretització normalitzada delta_t=0.51 delta_z^2:", foxtrot[0], "\n")
-print("Temps de resistència del teixit per a discretització normalitzada delta_t=0.49 delta_z^2:", foxtrot[1], "\n")
-print("Temps de resistència del teixit per a discretització normalitzada delta_t=0.25 delta_z^2:", foxtrot[2])
+Temp_1=calcul_temperatura(tau, delta_z, N, p[0], gamma[0]) #Temperatura per a la primera discretització
+Temp_2=calcul_temperatura(tau, delta_z, N, p[1], gamma[1]) #Temperatura per a la segona discretització
+Temp_3=calcul_temperatura(tau, delta_z, N, p[2], gamma[2]) #Temperatura per a la tercera discretització
 
-fitxer.write("*****\nResultats de les 3 simulacions:\n")
-fitxer.write("Temps de resistència del teixit per a discretització normalitzada delta_t=0.51 delta_z^2: "+ str(foxtrot[0]) + "\n")
-fitxer.write("Temps de resistència del teixit per a discretització normalitzada delta_t=0.49 delta_z^2: "+ str(foxtrot[1]) + "\n")
-fitxer.write("Temps de resistència del teixit per a discretització normalitzada delta_t=0.25 delta_z^2: "+ str(foxtrot[2]))
-fitxer.close()
+x=np.ones(N)
+
+for i in range(N):
+    x[i]= i*delta_z*const.L_0
+
+print(len(x))
+print(len(Temp_1))
+plt.figure(figsize=(8,6))
+plt.errorbar(x=x, y=Temp_1, xerrr=None, yerr=None, fmt='o', color="purple", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=r"$\Delta \hat t=0.51 \Delta (\hat z)^2$")
+plt.errorbar(x=x, y=Temp_2, xerrr=None, yerr=None, fmt='o', color="red", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=r"$\Delta \hat t=0.49 \Delta (\hat z)^2$")
+plt.errorbar(x=x, y=Temp_3, xerrr=None, yerr=None, fmt='o', color="blue", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=r"$\Delta \hat t=0.25 \Delta (\hat z)^2$")
+plt.xlabel(r"$z$ (m)")    #(o $x$, depenent de com es vulgui anomenar)
+plt.ylabel(r"$T$ (ºC)")
+plt.title(r"Temperatures a $t_a=0.025$ amb Euler explícit.")
+plt.legend(loc="best")
+plt.show()
