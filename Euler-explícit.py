@@ -2,6 +2,7 @@ import numpy as np
 import math
 import constants as const
 import matplotlib.pyplot as plt
+import solucio_analitica as sa
 
 # fitxer = open("Resultats ER.txt", "w") #Fitxer on es guardaran els resultats de les simulacions.
 
@@ -44,14 +45,27 @@ x=np.ones(N)
 for i in range(N):
     x[i]= i*delta_z*const.L_0
 
-print(len(x))
-print(len(Temp_1))
+Temp_real=np.ones(N)
+for i in range(N):
+    Temp_real[i]=sa.sol_analít(x[i]/const.L_0,t_a, 0.0001)-273.15
+print(Temp_real)
+
+E_1, E_2, E_3=0, 0, 0
+for i in range(N):
+    E_1+=abs(Temp_1[i]- Temp_real[i])
+    E_2+=abs(Temp_2[i]- Temp_real[i])
+    E_3+=abs(Temp_3[i]- Temp_real[i])
+E_1=E_1/N
+E_2=E_2/N
+E_3=E_3/N
+
 plt.figure(figsize=(8,6))
-plt.errorbar(x=x, y=Temp_1, xerrr=None, yerr=None, fmt='o', color="purple", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=r"$\Delta \hat t=0.51 \Delta (\hat z)^2$")
-plt.errorbar(x=x, y=Temp_2, xerrr=None, yerr=None, fmt='o', color="red", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=r"$\Delta \hat t=0.49 \Delta (\hat z)^2$")
-plt.errorbar(x=x, y=Temp_3, xerrr=None, yerr=None, fmt='o', color="blue", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=r"$\Delta \hat t=0.25 \Delta (\hat z)^2$")
+plt.errorbar(x=x, y=Temp_1, xerrr=None, yerr=None, fmt='o', color="purple", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=fr"$\Delta \hat t=0.51 (\Delta \hat z)^2$. Error={E_1}")
+plt.errorbar(x=x, y=Temp_2, xerrr=None, yerr=None, fmt='o', color="red", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=fr"$\Delta \hat t=0.49 (\Delta \hat z)^2$. Error={E_1}")
+plt.errorbar(x=x, y=Temp_3, xerrr=None, yerr=None, fmt='o', color="blue", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=fr"$\Delta \hat t=0.25 (\Delta \hat z)^2$. Error={E_1}")
 plt.xlabel(r"$z$ (m)")    #(o $x$, depenent de com es vulgui anomenar)
 plt.ylabel(r"$T$ (ºC)")
 plt.title(r"Temperatures a $t_a=0.025$ amb Euler explícit.")
 plt.legend(loc="best")
+plt.yscale('log')
 plt.show()

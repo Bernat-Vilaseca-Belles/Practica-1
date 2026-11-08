@@ -12,6 +12,3 @@ L_0=h #longitud característica (m)
 t_0=L_0**2/alpha #temps característic (s)
 t_a=0.025 #temps adimensional
 T_c=273.15+36.5 #temperatura a la frontera (K)
-# print(t_0)
-# print(L_0)
-# print(T_0)
