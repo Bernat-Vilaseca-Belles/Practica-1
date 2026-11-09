@@ -23,7 +23,8 @@ $$((\phi_j^n)')'= \frac{(\phi_{j}^n)' - (\phi_{j-1}^n)'}{\Delta \tilde z} \quad 
 
 $$((\phi_j^n)')'= \frac{\phi_{j+1}^n - \phi_j^n- \phi_j^n+ \phi_{j-1}^n}{(\Delta \tilde z)^2}=\frac{\phi_{j+1}^n - 2\phi_j^n+ \phi_{j-1}^n}{(\Delta \tilde z)^2}$$
 
-Ho apliquem a l'equació:<br>
+Ho apliquem a l'equació:
+
 $$\frac{\phi_j^{n+1}- \phi_j^n}{\Delta \tilde t}= \frac{\phi_{j+1}^n - 2\phi_j^n+ \phi_{j-1}^n + (\Delta \tilde z)^2}{(\Delta \tilde z)^2}$$
 
 $$\phi_j^{n+1}=\phi_j^n + \gamma(\phi_{j+1}^n - 2\phi_j^n+ \phi_{j-1}^n + (\Delta \tilde z)^2),$$
