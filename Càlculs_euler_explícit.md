@@ -1,4 +1,4 @@
-#Càlculs per realitzar el mètode d'Euler Explícit.
+# Càlculs per realitzar el mètode d'Euler Explícit.
 
 Tenim:
 $$\partial_{\tilde t} \tilde T= \partial^2_{\tilde z} \tilde T + 1$$
