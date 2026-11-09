@@ -4,7 +4,7 @@ from constants import T_c, sigma, V_0, k, t_a, T_0
 N=101
 z_tilde=np.linspace (0,1,N) #creem els punst on avaluarem la funció temperatura
 beta=(2*k)/(T_c*sigma*V_0**2)
-epsilon=0.0001 #definim un epslon per assegurar-nos que per un n gran, sumem mensy que epsilon
+epsilon=0.0001 #definim un epslon per assegurar-nos que per un n gran, sumem menys que epsilon
 n_max=1000
 def solucio_analitica(z,t,epsilon,n_max):
     T=T_c*np.ones_like(z)
