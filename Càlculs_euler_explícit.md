@@ -23,8 +23,9 @@ $$((\phi_j^n)')'= \frac{(\phi_{j}^n)' - (\phi_{j-1}^n)'}{\Delta \tilde z} \quad 
 
 $$((\phi_j^n)')'= \frac{\phi_{j+1}^n - \phi_j^n- \phi_j^n+ \phi_{j-1}^n}{(\Delta \tilde z)^2}=\frac{\phi_{j+1}^n - 2\phi_j^n+ \phi_{j-1}^n}{(\Delta \tilde z)^2}$$
 
-Ho apliquem a l'equació:
+Ho apliquem a l'equació:<br>
 $$\frac{\phi_j^{n+1}- \phi_j^n}{\Delta \tilde t}= \frac{\phi_{j+1}^n - 2\phi_j^n+ \phi_{j-1}^n + (\Delta \tilde z)^2}{(\Delta \tilde z)^2}$$
 
-$$\phi_j^{n+1}=\phi_j^n + \gamma(\phi_{j+1}^n - 2\phi_j^n+ \phi_{j-1}^n + (\Delta \tilde z)^2),$$<br>
+$$\phi_j^{n+1}=\phi_j^n + \gamma(\phi_{j+1}^n - 2\phi_j^n+ \phi_{j-1}^n + (\Delta \tilde z)^2),$$
+
 on $\gamma= \frac{\Delta \tilde t}{(\Delta \tilde z)^2}$. És estable sempre que $\gamma \le 1/2$. Per tant, tindrem un sistema inestable i caòtic amb la primera discretització. A més, aquests càlculs són per $n=1,...N-1$ i $j=2,..., N-1$. Ho hem calculat així perquè sabem sempre que la temperatura no normalitzada als punts extrems és $36.5^\circ \text C$.
