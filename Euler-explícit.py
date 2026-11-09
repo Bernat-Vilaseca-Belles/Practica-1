@@ -47,7 +47,7 @@ for i in range(N):
 
 Temp_real=np.ones(N)
 for i in range(N):
-    Temp_real[i]=sa.sol_analít(x[i]/const.L_0,t_a, 0.0001)-273.15
+    Temp_real[i]=sa.sol_analít(x[i]/const.L_0,t_a, 0.00000000001)-273.15
 print(Temp_real)
 
 E_1, E_2, E_3=0, 0, 0
@@ -61,8 +61,9 @@ E_3=E_3/N
 
 plt.figure(figsize=(8,6))
 plt.errorbar(x=x, y=Temp_1, xerrr=None, yerr=None, fmt='o', color="purple", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=fr"$\Delta \hat t=0.51 (\Delta \hat z)^2$. Error={E_1}")
-plt.errorbar(x=x, y=Temp_2, xerrr=None, yerr=None, fmt='o', color="red", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=fr"$\Delta \hat t=0.49 (\Delta \hat z)^2$. Error={E_1}")
-plt.errorbar(x=x, y=Temp_3, xerrr=None, yerr=None, fmt='o', color="blue", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=fr"$\Delta \hat t=0.25 (\Delta \hat z)^2$. Error={E_1}")
+plt.errorbar(x=x, y=Temp_2, xerrr=None, yerr=None, fmt='o', color="red", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=fr"$\Delta \hat t=0.49 (\Delta \hat z)^2$. Error={E_2}")
+plt.errorbar(x=x, y=Temp_3, xerrr=None, yerr=None, fmt='o', color="blue", markersize=2, ecolor="gray", elinewidth=0.8, capsize=1.5, label=fr"$\Delta \hat t=0.25 (\Delta \hat z)^2$. Error={E_3}")
+plt.scatter(x, Temp_real, color='k', s=2, label="Funció real")
 plt.xlabel(r"$z$ (m)")    #(o $x$, depenent de com es vulgui anomenar)
 plt.ylabel(r"$T$ (ºC)")
 plt.title(r"Temperatures a $t_a=0.025$ amb Euler explícit.")

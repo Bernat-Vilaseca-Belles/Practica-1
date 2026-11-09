@@ -27,9 +27,11 @@ def sol_analít(z, t, error):
     n=0
     T=T_c
     terme=1
-    while terme<error and n!=0:
-        T+=2*T_0*((2/((2*n+1)*np.pi()))*((1-np.exp(-((2*n+1)**2)*(np.pi()**2)*t)
-                                        /(((2*n+1)**2)*(np.pi()**2))))*np.sin((2*n+1)*np.pi()*z))
-        terme=abs(T_0*((2/((2*n+1)*np.pi()))*((1-np.exp(-((2*n+1)**2))*(np.pi()**2)*t)/(((2*n+1)**2)*(np.pi()**2)))*np.sin((2*n+1)*np.pi()*z)))/T
+    while terme>error:
+        T+=T_0*(4*((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
+                                        /(((2*n+1)**3)*(np.pi**3)))*np.sin((2*n+1)*np.pi*z))
+        if n>=1:
+            terme=abs(T_0*(4*((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
+                                        /(((2*n+1)**3)*(np.pi**3)))*np.sin((2*n+1)*np.pi*z)))/T
         n+=1
     return T
