@@ -9,7 +9,7 @@ A raó d'això, cal tenir en compte els valors dels coeficients de normalitzaci�
 """
 
 #Establim una funció que ens doni la temperatura al llarg de tota la discretització de z a partir de la solució de l'equació diferencial i fins a un temps determinat.
-def calcul_temperatura(T0, dz, N, p, g): #Temps inicil, interval entre dos punts de z, nombre de punts, temps màxim i gamma (que es dedueix en el document de calculs d'euler explícit.)
+def calcul_temperatura(T0, dz, N, p, g): #Temperatura inicial, interval entre dos punts de z, nombre de punts, temps màxim i gamma (que es dedueix en el document de calculs d'euler explícit.)
     phi = T0*np.ones(N) #Temperatura normalitzada a cada iteració.
     charlie= T0*np.ones(N) #Eina per trobar la temperatura a la partició de temps n+1. Nom escollit a l'atzar.
     for i in range(int(p)):
@@ -39,7 +39,7 @@ Temp_1=calcul_temperatura(tau, delta_z, N, p[0], gamma[0]) #Temperatura per a la
 Temp_2=calcul_temperatura(tau, delta_z, N, p[1], gamma[1]) #Temperatura per a la segona discretització
 Temp_3=calcul_temperatura(tau, delta_z, N, p[2], gamma[2]) #Temperatura per a la tercera discretització
 
-x=np.linspace(0, const.L_0, N)
+x=np.linspace(0, const.L_0, N) #Definim l'eix x de la gràfica
 
 Temp_real=np.ones(N) #Llista per calcular la temperatura a partir de la funció analítica.
 for i in range(N):
