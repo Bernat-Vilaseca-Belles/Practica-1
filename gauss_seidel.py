@@ -23,12 +23,12 @@ from constants import T_c, T_0
 #     return T_actual
 
 
-def gauss_seidel(g, dz, vector, N, error): #gamma, interval de z normalitzat, llistat de temperatura normalitzada, excloent els extrems.
-    A=[np.zeros(N-2)]*(N-2)
-    bravo=np.ones(N-2)
+def gauss_seidel(g, dz, vector, tau, N, error): #gamma, interval de z normalitzat, llistat de temperatura normalitzada, excloent els extrems.
+    A=[np.zeros(N-2) for _ in range(N-2)]
     b=np.ones(N-2)
-    for i in range(N-2): b[i]=g*(dz**2)+float(vector[i])
-
+    for i in range(N-2): b[i]=g*(dz**2)+vector[i]
+    b[0]+=g*tau
+    b[N-3]+=g*tau
     for i in range(N-2):
         for j in range(N-2):
             if j==i:
@@ -38,23 +38,23 @@ def gauss_seidel(g, dz, vector, N, error): #gamma, interval de z normalitzat, ll
     b_1=True #No convergència. Boolean 1.
     k=0
     while(b_1):
-        x=vector
+        x=vector.copy()
         echo=np.ones(N-2)
         resta=np.ones(N-2)
-        for i in range(N-2): echo[i]=x[i]
         for i in range(N-2):
-            suma_1, suma_2=0, 0
+            echo[i]=x[i]
+            suma_1, suma_2=0.0, 0.0
             # if i>1:
             #     for j in range(0, i-2):
             #         suma_1+=A[i][j]*x[j]
-            if i>1:
+            if i>0:
                 suma_1=A[i][i-1]*x[i-1]
             # for j in range(i+1, N-2):
             #     suma_2+=A[i][j]*x[j]
             if i<N-3:
                 suma_2=A[i][i+1]*x[i+1]
-            x[i]=(1/A[i][i])*(b[i]-suma_1-suma_2)
-        for i in range(N-2): resta[i]=float(x[i])-float(echo[i])
+            x[i]=(1/(A[i][i]))*(b[i]-suma_1-suma_2)
+            resta[i]=abs(x[i]-echo[i])
         if max(resta)<=error:
             b_1=False
         k+=1
