@@ -27,7 +27,7 @@ def gauss_seidel(g, dz, vector, N, error): #gamma, interval de z normalitzat, ll
     A=[np.zeros(N-2)]*(N-2)
     bravo=np.ones(N-2)
     b=np.ones(N-2)
-    for i in range(N-2): b[i]=g*(dz**2)+vector[i]
+    for i in range(N-2): b[i]=g*(dz**2)+float(vector[i])
 
     for i in range(N-2):
         for j in range(N-2):
@@ -41,16 +41,20 @@ def gauss_seidel(g, dz, vector, N, error): #gamma, interval de z normalitzat, ll
         x=vector
         echo=np.ones(N-2)
         resta=np.ones(N-2)
-        for i in range(N-2): 
-            echo[i]=x[i]
+        for i in range(N-2): echo[i]=x[i]
+        for i in range(N-2):
             suma_1, suma_2=0, 0
+            # if i>1:
+            #     for j in range(0, i-2):
+            #         suma_1+=A[i][j]*x[j]
             if i>1:
-                for j in range(0, i-2):
-                    suma_1+=A[i][j]*x[j]
-            for j in range(i+1, N-2):
-                suma_2+=A[i][j]*x[j]
+                suma_1=A[i][i-1]*x[i-1]
+            # for j in range(i+1, N-2):
+            #     suma_2+=A[i][j]*x[j]
+            if i<N-3:
+                suma_2=A[i][i+1]*x[i+1]
             x[i]=(1/A[i][i])*(b[i]-suma_1-suma_2)
-            resta[i]=x[i]-echo[i]
+        for i in range(N-2): resta[i]=float(x[i])-float(echo[i])
         if max(resta)<=error:
             b_1=False
         k+=1
