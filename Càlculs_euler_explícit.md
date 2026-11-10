@@ -8,7 +8,7 @@ Tenim una discretització de $\tilde z$ de $N=101$ punts. Per tant:
 $$\tilde z = \frac z {L_0} \Rightarrow \Delta \tilde z = \frac{\Delta z}{L_0} \xrightarrow{\Delta z = \frac{h-0}{N-1}} \Delta \tilde z= \frac h h \frac{1}{N-1}= \frac 1{100}$$
 
 Tenim discretitzacions en el temps de:
-> $\delta \tilde t= 0.51 (\delta \tilde z)^2, \quad \delta \tilde t= 0.49 (\delta \tilde z)^2, \quad \delta \tilde t= 0.51 (\delta \tilde z)^2$
+> $\Delta \tilde t= 0.51 (\Delta \tilde z)^2, \quad \delta \tilde t= 0.49 (\delta \tilde z)^2, \quad \Delta \tilde t= 0.25 (\delta \tilde z)^2$
 
 Enomenem $\phi_j^n$ a la temperatura normalitzada a temps $n$ i posició en $z$ $j$.<br>
 Volem trobar una expressió que ens doni el valor de $T$ a temps $n+1$.
