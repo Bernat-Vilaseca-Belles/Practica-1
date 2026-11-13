@@ -23,6 +23,7 @@ from constants import T_c, T_0
 #     return T_actual
 
 
+<<<<<<< HEAD
 def gauss_seidel(vector, N, error, A, b): #gamma, interval de z normalitzat, llistat de temperatura normalitzada de la iteració anterior excloent els extrems, temperatura inicial, nombre de punts en z, error que estem disposats a assumir.
     '''
     A=[np.zeros(N-2) for _ in range(N-2)] #Definició de la matriu.
@@ -38,6 +39,9 @@ def gauss_seidel(vector, N, error, A, b): #gamma, interval de z normalitzat, lli
                 A[i][j]=-g #Definim els valors de A al voltant de la diagonal. Els altres valors són 0
     '''
 
+=======
+def gauss_seidel(A, g, vector, b, N, error): #Matriu del sistema, gamma, llistat de temperatura normalitzada de la iteració anterior excloent els extrems, terme b de l'expressió Ax=b, nombre de punts en z, error que estem disposats a assumir.
+>>>>>>> refs/remotes/origin/main
     b_1=True #No convergència. Boolean 1.
     k=0 #Comptador.
     while(b_1):
@@ -47,13 +51,8 @@ def gauss_seidel(vector, N, error, A, b): #gamma, interval de z normalitzat, lli
         for i in range(N-2):
             echo[i]=x[i] #Definim els valors de echo com els de l'iteració k abans d'assignar els valors de k+1 a les x.
             suma_1, suma_2=0.0, 0.0 #Sumes de la fòrmula del gauss-seidel.
-            # if i>1:
-            #     for j in range(0, i-2):
-            #         suma_1+=A[i][j]*x[j]
             if i>0: #Modifiquem només si la i és major a 0. 
                 suma_1=A[i][i-1]*x[i-1] #Apliquem la suma, però com que tots els altres valors de la fila de A i j<i-1 són zero, no els hem de tenir en compte
-            # for j in range(i+1, N-2):
-            #     suma_2+=A[i][j]*x[j]
             if i<N-3: #Només tenim en compte els termes que no siguin a l'extrem
                 suma_2=A[i][i+1]*x[i+1] #Fem la suma per tots els valors no zero de j>i+1
             x[i]=(1/(A[i][i]))*(b[i]-suma_1-suma_2) #Apliquem la fórmula
