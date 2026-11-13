@@ -23,39 +23,39 @@ from constants import T_c, T_0
 #     return T_actual
 
 
-def gauss_seidel(g, dz, vector, tau, N, error): #gamma, interval de z normalitzat, llistat de temperatura normalitzada, excloent els extrems.
-    A=[np.zeros(N-2) for _ in range(N-2)]
-    b=np.ones(N-2)
-    for i in range(N-2): b[i]=g*(dz**2)+vector[i]
-    b[0]+=g*tau
-    b[N-3]+=g*tau
+def gauss_seidel(g, dz, vector, tau, N, error): #gamma, interval de z normalitzat, llistat de temperatura normalitzada de la iteració anterior excloent els extrems, temperatura inicial, nombre de punts en z, error que estem disposats a assumir.
+    A=[np.zeros(N-2) for _ in range(N-2)] #Definició de la matriu.
+    b=np.ones(N-2) #Definició del vector corresponent de Ax=b
+    for i in range(N-2): b[i]=g*(dz**2)+vector[i] #Assignem els valors de b
+    b[0]+=g*tau #Com que és el valor de j=2 i no està definida la operació per a j=1, cal afegir-hi el valor esctremal
+    b[N-3]+=g*tau #Afegim el valor extremal de la temperatura per a j=N
     for i in range(N-2):
         for j in range(N-2):
             if j==i:
-                A[i][j]=1+(2*g)
+                A[i][j]=1+(2*g) #Definim els valors de A a la diagonal.
             if ((j-1)==i) or ((j+1)==i):
-                A[i][j]=-g
+                A[i][j]=-g #Definim els valors de A al voltant de la diagonal. Els altres valors són 0
     b_1=True #No convergència. Boolean 1.
-    k=0
+    k=0 #Comptador.
     while(b_1):
-        x=vector.copy()
-        echo=np.ones(N-2)
-        resta=np.ones(N-2)
+        x=vector.copy() #Fem una còpia del vector que li subministrem.
+        echo=np.ones(N-2) #Eina matemàtica per operar les x. Represneta ser la x a la iteració k quan calculem la iteració k+1. Nom aleatori.
+        E=np.ones(N-2) #Llista de l'error per dir quin error estem disposats a assumir.
         for i in range(N-2):
-            echo[i]=x[i]
-            suma_1, suma_2=0.0, 0.0
+            echo[i]=x[i] #Definim els valors de echo com els de l'iteració k abans d'assignar els valors de k+1 a les x.
+            suma_1, suma_2=0.0, 0.0 #Sumes de la fòrmula del gauss-seidel.
             # if i>1:
             #     for j in range(0, i-2):
             #         suma_1+=A[i][j]*x[j]
-            if i>0:
-                suma_1=A[i][i-1]*x[i-1]
+            if i>0: #Modifiquem només si la i és major a 0. 
+                suma_1=A[i][i-1]*x[i-1] #Apliquem la suma, però com que tots els altres valors de la fila de A i j<i-1 són zero, no els hem de tenir en compte
             # for j in range(i+1, N-2):
             #     suma_2+=A[i][j]*x[j]
-            if i<N-3:
-                suma_2=A[i][i+1]*x[i+1]
-            x[i]=(1/(A[i][i]))*(b[i]-suma_1-suma_2)
-            resta[i]=abs(x[i]-echo[i])
-        if max(resta)<=error:
-            b_1=False
-        k+=1
+            if i<N-3: #Només tenim en compte els termes que no siguin a l'extrem
+                suma_2=A[i][i+1]*x[i+1] #Fem la suma per tots els valors no zero de j>i+1
+            x[i]=(1/(A[i][i]))*(b[i]-suma_1-suma_2) #Apliquem la fórmula
+            E[i]=abs(x[i]-echo[i])/x[i] #Calculem la convergència.
+        if max(E)<=error: #Mirem si convergeix.
+            b_1=False #Veiem que ha convergit, per tant canviem el boolean.
+        k+=1 #Augmentem el comptador.
     return x, k

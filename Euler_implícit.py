@@ -18,21 +18,21 @@ t_a=0.025
 p=np.ones(2)
 for i in range(2): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza la simulació.
 
-foxtrot=[[],[]]
+foxtrot=[[],[]] #Llista formada per dues llistes que contindran les temperatures en les diferents posicions. Nom aleatori.
 for o in range(2):
-    phi=tau*np.ones(N)
-    v=phi[1:N-1]
+    phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
+    v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        u, total=gs(gamma[o], delta_z, v, tau, N, 0.0001)
-        for k in range(N-2): v[k]=u[k]
-    foxtrot[o]=np.append(np.array([phi[0]]), np.array(v))
-    foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]]))
+        u, total=gs(gamma[o], delta_z, v, tau, N, 0.0005) #Apliquem el mètode de gauss-seidel
+        for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
+    foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
+    foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
     for i in range(len(foxtrot[o])):
-        foxtrot[o][i]=(foxtrot[o][i]*const.T_0)-273.15
+        foxtrot[o][i]=(foxtrot[o][i]*const.T_0)-273.15 #Canviem la llista a temperatures no normalitzades.
 
 x=np.linspace(0, const.L_0, N) #Definim l'eix x de la gràfica
 
-Temp_1, Temp_2= foxtrot
+Temp_1, Temp_2= foxtrot #Assignem els valors de cada temperatura a una llista corresponent.
 Temp_real=np.ones(N) #Llista per calcular la temperatura a partir de la funció analítica.
 for i in range(N):
     Temp_real[i]=sa.sol_analít(x[i]/const.L_0,t_a, 0.00000000001)-273.15 #Temperatura a cada punt del mallat segons la solució analítica
@@ -44,6 +44,7 @@ for i in range(N):
 E_1=E_1/N #Es normalitza l'error 1
 E_2=E_2/N #Normalització de l'error 2
 
+#Gràfic.
 plt.figure(figsize=(8,6))
 plt.scatter(x, Temp_1, color='g', s=2, label=rf"Discretització $\Delta \tilde t = (\Delta \tilde z)^2$. Error={E_1}")
 plt.scatter(x, Temp_2, color='b', s=2, label=rf"Discretització $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$. Error={E_2}")
