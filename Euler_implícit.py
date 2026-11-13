@@ -6,7 +6,7 @@ import math
 from gauss_seidel import gauss_seidel as gs
 
 #Definició del vector sortida (S'aplica més endevant)
-def calcul_b(vector, dz, g, tau):
+def calcul_b(vector, dz, g, tau): #Llistat de temperatura normalitzada de la iteració anterior excloent els extrems, interval de z, gamma, temperatura inicial normalitzada
     b=np.ones(N-2) #Definició del vector corresponent de Ax=b
     for i in range(N-2): b[i]=g*(dz**2)+vector[i] #Assignem els valors de b
     b[0]+=g*tau #Com que és el valor de j=2 i no està definida la operació per a j=1, cal afegir-hi el valor esctremal
@@ -26,7 +26,7 @@ p=np.ones(2)
 for i in range(2): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza la simulació.
 
 #Definim la Matriu A
-A=[]
+A=[] #Com que tenim dues gammes, tindrem dues matrius. Per tant. Definim A com la llista de les dues matrius.
 for k in range(len(gamma)):
     Bravo=[np.zeros(N-2) for _ in range(N-2)] #Definició de la matriu.
     for i in range(N-2):
@@ -38,17 +38,12 @@ for k in range(len(gamma)):
     A.append(Bravo)
 
 
-
-
-
-
-
 foxtrot=[[],[]] #Llista formada per dues llistes que contindran les temperatures en les diferents posicions. Nom aleatori.
 for o in range(2):
     phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
     v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        u, total=gs(A[o], gamma[o], delta_z, v, calcul_b(v, delta_z, gamma[o], tau), tau, N, 0.001) #Apliquem el mètode de gauss-seidel
+        u, total=gs(A[o], gamma[o], v, calcul_b(v, delta_z, gamma[o], tau), N, 0.001) #Apliquem el mètode de gauss-seidel
         for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.

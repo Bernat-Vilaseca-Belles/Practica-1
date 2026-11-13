@@ -23,7 +23,7 @@ from constants import T_c, T_0
 #     return T_actual
 
 
-def gauss_seidel(A, g, dz, vector, b, tau, N, error): #Matriu del sistema, gamma, interval de z normalitzat, llistat de temperatura normalitzada de la iteració anterior excloent els extrems, temperatura inicial, nombre de punts en z, error que estem disposats a assumir.
+def gauss_seidel(A, g, vector, b, N, error): #Matriu del sistema, gamma, llistat de temperatura normalitzada de la iteració anterior excloent els extrems, terme b de l'expressió Ax=b, nombre de punts en z, error que estem disposats a assumir.
     b_1=True #No convergència. Boolean 1.
     k=0 #Comptador.
     while(b_1):
