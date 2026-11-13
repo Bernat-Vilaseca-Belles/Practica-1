@@ -23,11 +23,7 @@ from constants import T_c, T_0
 #     return T_actual
 
 
-def gauss_seidel(A, g, dz, vector, tau, N, error): #Matriu del sistema, gamma, interval de z normalitzat, llistat de temperatura normalitzada de la iteració anterior excloent els extrems, temperatura inicial, nombre de punts en z, error que estem disposats a assumir.
-    b=np.ones(N-2) #Definició del vector corresponent de Ax=b
-    for i in range(N-2): b[i]=g*(dz**2)+vector[i] #Assignem els valors de b
-    b[0]+=g*tau #Com que és el valor de j=2 i no està definida la operació per a j=1, cal afegir-hi el valor esctremal
-    b[N-3]+=g*tau #Afegim el valor extremal de la temperatura per a j=N
+def gauss_seidel(A, g, dz, vector, b, tau, N, error): #Matriu del sistema, gamma, interval de z normalitzat, llistat de temperatura normalitzada de la iteració anterior excloent els extrems, temperatura inicial, nombre de punts en z, error que estem disposats a assumir.
     b_1=True #No convergència. Boolean 1.
     k=0 #Comptador.
     while(b_1):

@@ -5,6 +5,13 @@ import constants as const
 import math
 from gauss_seidel import gauss_seidel as gs
 
+#Definició del vector sortida (S'aplica més endevant)
+def calcul_b(vector, dz, g, tau):
+    b=np.ones(N-2) #Definició del vector corresponent de Ax=b
+    for i in range(N-2): b[i]=g*(dz**2)+vector[i] #Assignem els valors de b
+    b[0]+=g*tau #Com que és el valor de j=2 i no està definida la operació per a j=1, cal afegir-hi el valor esctremal
+    b[N-3]+=g*tau #Afegim el valor extremal de la temperatura per a j=N
+    return b
 
 #Càlcul de les variables necessàries.:
 tau = (36.5+273.15)/const.T_0 #Temperatura inicial normalitzada. tau=T(t=0)/T_0, T_0= k/sigma*(V_0**2).
@@ -30,12 +37,18 @@ for k in range(len(gamma)):
                 Bravo[i][j]=-gamma[k] #Definim els valors de A al voltant de la diagonal. Els altres valors són 0
     A.append(Bravo)
 
+
+
+
+
+
+
 foxtrot=[[],[]] #Llista formada per dues llistes que contindran les temperatures en les diferents posicions. Nom aleatori.
 for o in range(2):
     phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
     v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        u, total=gs(A[o], gamma[o], delta_z, v, tau, N, 0.001) #Apliquem el mètode de gauss-seidel
+        u, total=gs(A[o], gamma[o], delta_z, v, calcul_b(v, delta_z, gamma[o], tau), tau, N, 0.001) #Apliquem el mètode de gauss-seidel
         for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.

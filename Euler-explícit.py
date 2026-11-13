@@ -42,26 +42,52 @@ Temp_3=calcul_temperatura(tau, delta_z, N, p[2], gamma[2]) #Temperatura per a la
 x=np.linspace(0, const.L_0, N) #Definim l'eix x de la gràfica
 
 Temp_real=np.ones(N) #Llista per calcular la temperatura a partir de la funció analítica.
+Temp_real=sa.sol_analít(delta_z, N,t_a, 0.00001) #Llista per calcular la temperatura a partir de la funció analítica.
 for i in range(N):
-    Temp_real[i]=sa.sol_analít(x[i]/const.L_0,t_a, 0.00000000001)-273.15 #Temperatura a cada punt del mallat segons la solució analítica
+    Temp_real[i]=Temp_real[i]-273.15 #Temperatura a cada punt del mallat segons la solució analítica
 
-E_1, E_2, E_3=0, 0, 0 #Errors de cada solució
+E_1, E_2, E_3=np.ones(N), np.ones(N), np.ones(N) #Errors de cada solució
 for i in range(N):
-    E_1+=abs(Temp_1[i]- Temp_real[i]) #Es calcula la suma dels errors de cada punt del mallat de la solució 1.
-    E_2+=abs(Temp_2[i]- Temp_real[i]) #Suma errors solució 2.
-    E_3+=abs(Temp_3[i]- Temp_real[i]) #Suma errors solució 3.
-E_1=E_1/N #Es normalitza l'error 1
-E_2=E_2/N #Normalització de l'error 2
-E_3=E_3/N #Normalització de l'error 3
+    E_1[i]=abs(Temp_1[i]- Temp_real[i])/Temp_real[i] #Es calcula la suma dels errors de cada punt del mallat de la solució 1.
+    E_2[i]=abs(Temp_2[i]- Temp_real[i])/Temp_real[i] #Suma errors solució 2.
+    E_3[i]=abs(Temp_3[i]- Temp_real[i])/Temp_real[i] #Suma errors solució 3.
+# E_1=E_1/N #Es normalitza l'error 1
+# E_2=E_2/N #Normalització de l'error 2
+# E_3=E_3/N #Normalització de l'error 3
 
-plt.figure(figsize=(8,6))
-plt.scatter(x=x, y=Temp_1, marker='o', color="purple", s=2, label=fr"$\Delta \hat t=0.51 (\Delta \hat z)^2$. Error={E_1}")
-plt.scatter(x=x, y=Temp_2, marker='o', color="red", s=2, label=fr"$\Delta \hat t=0.49 (\Delta \hat z)^2$. Error={E_2}")
-plt.scatter(x=x, y=Temp_3, marker='o', color="blue", s=2, label=fr"$\Delta \hat t=0.25 (\Delta \hat z)^2$. Error={E_3}")
-plt.scatter(x, Temp_real, color='k', s=2, label="Funció real")
-plt.xlabel(r"$z$ (m)")    #(o $x$, depenent de com es vulgui anomenar)
-plt.ylabel(r"$T$ (ºC)")
-plt.title(r"Temperatures a $t_a=0.025$ amb Euler explícit.")
+# plt.figure(figsize=(8,6))
+# plt.scatter(x=x, y=Temp_1, marker='o', color="purple", s=2, label=fr"$\Delta \hat t=0.51 (\Delta \hat z)^2$. Error={E_1}")
+# plt.scatter(x=x, y=Temp_2, marker='o', color="red", s=2, label=fr"$\Delta \hat t=0.49 (\Delta \hat z)^2$. Error={E_2}")
+# plt.scatter(x=x, y=Temp_3, marker='o', color="blue", s=2, label=fr"$\Delta \hat t=0.25 (\Delta \hat z)^2$. Error={E_3}")
+# plt.scatter(x, Temp_real, color='k', s=2, label="Funció real")
+# plt.xlabel(r"$z$ (m)")    #(o $x$, depenent de com es vulgui anomenar)
+# plt.ylabel(r"$T$ (ºC)")
+# plt.title(r"Temperatures a $t_a=0.025$ amb Euler explícit.")
+# plt.legend(loc="best")
+# plt.yscale('log')
+# plt.show()
+
+
+plt.figure(figsize=(16,6))
+plt.subplot(1,2,1)
+plt.scatter(x, Temp_1, marker='o', color='g', s=2, label=rf"Discretització $\Delta \tilde t = (\Delta \tilde z)^2$")
+plt.scatter(x, Temp_2, marker='o', color='b', s=2, label=rf"Discretització $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
+plt.scatter(x, Temp_3, marker='o', color="purple", s=2, label=fr"Discretització $\Delta \hat t=0.25 (\Delta \hat z)^2$")
+plt.scatter(x, Temp_real, color='k', s=3, label=rf"Funció real")
+plt.xlabel(r"$z$ (m)")
+plt.ylabel(r"$T$ ($^\circ $C)")
 plt.legend(loc="best")
 plt.yscale('log')
+plt.title(r"Mètode d'Euler implícit.")
+plt.legend(loc='best')
+
+plt.subplot(1,2,2)
+plt.scatter(x, E_1, color='g', s=2, label=rf"Error de $\Delta \tilde t = (\Delta \tilde z)^2$")
+plt.scatter(x, E_2, color='b', s=2, label=rf"Error de $\Delta \tilde t = 0.5(\Delta \tilde z)^2$")
+plt.scatter(x, E_3, color='purple', s=2, label=rf"Error de $\Delta \tilde t = 0.25 (\Delta \tilde z)^2$")
+plt.xlabel(r"$z$ (m)")
+plt.ylabel(r"Error normalitzat")
+plt.title(r"Errors del mètode d'Euler implícit.")
+plt.yscale('log')
+plt.legend(loc='best')
 plt.show()
