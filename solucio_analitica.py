@@ -20,16 +20,19 @@ from constants import T_c, sigma, V_0, k, t_a, T_0
 
 # T_analitica=solucio_analitica(z_tilde,t_a,epsilon,n_max)
 
-def sol_analít(z, t, error):
-    beta=(T_c/T_0)
+def sol_analít(dz, N, t, error):
+    vector=T_c*np.ones(N)
+    E=np.ones(N)
     n=0
-    T=T_c
-    terme=1
-    while terme>error:
-        T+=T_0*(4*((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
-                                        /(((2*n+1)**3)*(np.pi**3)))*np.sin((2*n+1)*np.pi*z))
-        if n>=1:
-            terme=abs(T_0*(4*((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
-                                        /(((2*n+1)**3)*(np.pi**3)))*np.sin((2*n+1)*np.pi*z)))/T
+    b_1=True #No convergent
+    while b_1:
+        for i in range(N):
+            vector[i]+=T_0*(4*((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
+                                        /(((2*n+1)**3)*(np.pi**3)))*np.sin((2*n+1)*np.pi*(i*dz)))
+            if n>1:
+                E[i]=abs(T_0*(4*((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
+                                 /(((2*n+1)**3)*(np.pi**3)))*np.sin((2*n+1)*np.pi*(i*dz))))/vector[i]
+        if max(E)<=error:
+            b_1=False
         n+=1
-    return T
+    return vector
