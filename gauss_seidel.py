@@ -28,6 +28,8 @@ def gauss_seidel(A, g, dz, vector, tau, N, error): #Matriu del sistema, gamma, i
     for i in range(N-2): b[i]=g*(dz**2)+vector[i] #Assignem els valors de b
     b[0]+=g*tau #Com que és el valor de j=2 i no està definida la operació per a j=1, cal afegir-hi el valor esctremal
     b[N-3]+=g*tau #Afegim el valor extremal de la temperatura per a j=N
+    b_1=True #No convergència. Boolean 1.
+    k=0 #Comptador.
     while(b_1):
         x=vector.copy() #Fem una còpia del vector que li subministrem.
         echo=np.ones(N-2) #Eina matemàtica per operar les x. Represneta ser la x a la iteració k quan calculem la iteració k+1. Nom aleatori.

@@ -19,20 +19,23 @@ p=np.ones(2)
 for i in range(2): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza la simulació.
 
 #Definim la Matriu A
-A=[np.zeros(N-2) for _ in range(N-2)] #Definició de la matriu.
-for i in range(N-2):
-    for j in range(N-2):
-        if j==i:
-            A[i][j]=1+(2*g) #Definim els valors de A a la diagonal.
-        if ((j-1)==i) or ((j+1)==i):
-            A[i][j]=-g #Definim els valors de A al voltant de la diagonal. Els altres valors són 0
+A=[]
+for k in range(len(gamma)):
+    Bravo=[np.zeros(N-2) for _ in range(N-2)] #Definició de la matriu.
+    for i in range(N-2):
+        for j in range(N-2):
+            if j==i:
+                Bravo[i][j]=1+(2*gamma[k]) #Definim els valors de A a la diagonal.
+            if ((j-1)==i) or ((j+1)==i):
+                Bravo[i][j]=-gamma[k] #Definim els valors de A al voltant de la diagonal. Els altres valors són 0
+    A.append(Bravo)
 
 foxtrot=[[],[]] #Llista formada per dues llistes que contindran les temperatures en les diferents posicions. Nom aleatori.
 for o in range(2):
     phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
     v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        u, total=gs(A, gamma[o], delta_z, v, tau, N, 0.001) #Apliquem el mètode de gauss-seidel
+        u, total=gs(A[o], gamma[o], delta_z, v, tau, N, 0.001) #Apliquem el mètode de gauss-seidel
         for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
