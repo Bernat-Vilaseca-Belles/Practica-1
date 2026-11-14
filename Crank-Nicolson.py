@@ -6,11 +6,11 @@ import constants as const
 import math
 from gauss_seidel import gauss_seidel as gs
 
-
+fitxer=open("Matriu_A.txt", "w")
 
 #Definim la matriu A
 def calcul_A(g):
-    A = [np.zeros(N-2) for _ in range(N-2)]
+    Bravo = [np.zeros(N-2) for _ in range(N-2)]
     for i in range(N-2):
         for j in range(N-2):
             if i==j:
@@ -23,15 +23,14 @@ def calcul_A(g):
 
 #Definim el vector b
 def calcul_b(v, g, dt, tau):
-    b1 = 2*(1-g)*v[0] + g*v[1] + 2*dt + g*tau
-    bn = g*v[-2] + 2*(1-g)*v[-1] + 2*dt + g*tau
-    br = np.zeros(N-4)
-    for i in range(N-4):
-        br[i]= g*v[i] + 2*(1-g)*v[i+1] + g*v[i+2] + 2*dt
-    london=np.append(b1,br)
-    london = np.append(london,bn)
-
-    return london
+    b=np.ones(N-2)
+    deca=2*(1-g)
+    golf=2*dt
+    for i in range(1, N-4):
+        b[i]=g*v[i]+deca*v[i+1]+ g*v[i+2] + golf
+    b[0] = g*tau+ deca*v[0] + g*v[1] + golf
+    b[N-3] = g*v[N-4] + deca*v[N-3] + g*tau + golf 
+    return b
 
 
 #Càlcul de les variables necessàries.:
@@ -49,12 +48,13 @@ for i in range(2): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza
 A=[calcul_A(gamma[0]), calcul_A(gamma[1])]
 
 
+
 foxtrot=[[],[]] #Llista formada per dues llistes que contindran les temperatures en les diferents posicions. Nom aleatori.
 for o in range(2):
     phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
     v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        u, total=gs(calcul_A(gamma[o]), gamma[o], v, calcul_b(v, gamma[o], delta_t[o], tau), N, 1) #Apliquem el mètode de gauss-seidel
+        u, total=gs(A[o], gamma[o], v, calcul_b(v, gamma[o], delta_t[o], tau), N, 1) #Apliquem el mètode de gauss-seidel
         for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
@@ -84,6 +84,7 @@ plt.scatter(x, Temp_real, color='k', s=3, label=rf"Funció real")
 plt.xlabel(r"$\Delta z$ (m)")
 plt.ylabel(r"$T$ ($^\circ $C)")
 plt.title(r"Mètode d'Euler implícit.")
+plt.yscale('log')
 plt.legend(loc='best')
 
 plt.subplot(1,2,2)
