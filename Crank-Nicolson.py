@@ -149,7 +149,7 @@ plt.show()
 ##Gràfics Euler implícit
 
 plt.figure(figsize=(16,6))
-plt.subplot(2,2,1)
+plt.subplot(1,2,1)
 plt.scatter(x, ei_T1, marker='o', color='r', s=2, label=rf"Euler explícit amb $\Delta \tilde t =(\Delta \tilde z)^2$")
 plt.scatter(x, ei_T2, marker='o', color='indigo', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
 plt.scatter(x, Temp_2, color='k', s=3, label=rf"Crack-Nickolson amb $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
@@ -159,7 +159,7 @@ plt.legend(loc="best")
 plt.title(r"Comparació Euler explícit amb Crack-Nicolson")
 plt.legend(loc='best')
 
-plt.subplot(2,2,2)
+plt.subplot(1,2,2)
 plt.scatter(x, Err_21, color='r', s=2, label=rf"Euler explícit amb $\Delta \tilde t=  (\Delta \tilde z)^2$")
 plt.scatter(x, Err_22, color='indigo', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
 plt.xlabel(r"$\Delta z$ (m)")
