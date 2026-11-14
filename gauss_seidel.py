@@ -38,7 +38,7 @@ def gauss_seidel(A, g, vector, b, N, error): #Matriu del sistema, gamma, llistat
             if i<N-3: #Només tenim en compte els termes que no siguin a l'extrem
                 suma_2=A[i][i+1]*x[i+1] #Fem la suma per tots els valors no zero de j>i+1
             x[i]=(1/(A[i][i]))*(b[i]-suma_1-suma_2) #Apliquem la fórmula
-            E[i]=abs(x[i]-echo[i])/x[i] #Calculem la convergència.
+            E[i]=abs((x[i]-echo[i])/x[i]) #Calculem la convergència.
         if max(E)<=error: #Mirem si convergeix.
             b_1=False #Veiem que ha convergit, per tant canviem el boolean.
         k+=1 #Augmentem el comptador.
