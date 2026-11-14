@@ -26,10 +26,10 @@ def calcul_b(v, g, dt, tau):
     b=np.ones(N-2)
     deca=2*(1-g)
     golf=2*dt
-    for i in range(1, N-4):
+    for i in range(1, N-3):
         b[i]=g*v[i-1]+deca*v[i]+ g*v[i+1] + golf
-    b[0] = g*tau+ deca*v[0] + g*v[1] + golf
-    b[N-3] = g*v[N-4] + deca*v[N-3] + g*tau + golf 
+    b[0] = 2*g*tau+ deca*v[0] + g*v[1] + golf
+    b[N-3] = g*v[N-4] + deca*v[N-3] + 2*g*tau + golf 
     return b
 
 
@@ -54,7 +54,7 @@ for o in range(2):
     phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
     v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        u, total=gs(A[o], gamma[o], v, calcul_b(v, gamma[o], delta_t[o], tau), N, 0.01) #Apliquem el mètode de gauss-seidel
+        u, total=gs(A[o], gamma[o], v, calcul_b(v, gamma[o], delta_t[o], tau), N, 0.00001) #Apliquem el mètode de gauss-seidel
         for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
@@ -84,7 +84,6 @@ plt.scatter(x, Temp_real, color='k', s=3, label=rf"Funció real")
 plt.xlabel(r"$\Delta z$ (m)")
 plt.ylabel(r"$T$ ($^\circ $C)")
 plt.title(r"Mètode d'Euler implícit.")
-plt.yscale('log')
 plt.legend(loc='best')
 
 plt.subplot(1,2,2)

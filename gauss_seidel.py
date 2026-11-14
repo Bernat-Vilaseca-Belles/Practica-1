@@ -26,8 +26,8 @@ from constants import T_c, T_0
 def gauss_seidel(A, g, vector, b, N, error): #Matriu del sistema, gamma, llistat de temperatura normalitzada de la iteració anterior excloent els extrems, terme b de l'expressió Ax=b, nombre de punts en z, error que estem disposats a assumir.
     b_1=True #No convergència. Boolean 1.
     k=0 #Comptador.
+    x=vector.copy() #Fem una còpia del vector que li subministrem.
     while(b_1):
-        x=vector.copy() #Fem una còpia del vector que li subministrem.
         echo=np.ones(N-2) #Eina matemàtica per operar les x. Represneta ser la x a la iteració k quan calculem la iteració k+1. Nom aleatori.
         E=np.ones(N-2) #Llista de l'error per dir quin error estem disposats a assumir.
         for i in range(N-2):

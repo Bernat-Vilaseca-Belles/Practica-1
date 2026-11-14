@@ -9,8 +9,8 @@ from gauss_seidel import gauss_seidel as gs
 def calcul_b(vector, dz, g, tau): #Llistat de temperatura normalitzada de la iteració anterior excloent els extrems, interval de z, gamma, temperatura inicial normalitzada
     b=np.ones(N-2) #Definició del vector corresponent de Ax=b
     for i in range(N-2): b[i]=g*(dz**2)+vector[i] #Assignem els valors de b
-    b[0]+=g*tau #Com que és el valor de j=2 i no està definida la operació per a j=1, cal afegir-hi el valor esctremal
-    b[N-3]+=g*tau #Afegim el valor extremal de la temperatura per a j=N
+    b[0]+=2*g*tau #Com que és el valor de j=2 i no està definida la operació per a j=1, cal afegir-hi el valor esctremal
+    b[N-3]+=2*g*tau #Afegim el valor extremal de la temperatura per a j=N
     return b
 
 #Càlcul de les variables necessàries.:
