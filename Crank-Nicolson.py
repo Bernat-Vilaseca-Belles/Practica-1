@@ -10,16 +10,16 @@ from gauss_seidel import gauss_seidel as gs
 
 #Definim la matriu A
 def calcul_A(g):
-    A = [np.zeros(N-2)]*(N-2)
+    Bravo=[np.zeros(N-2) for _ in range(N-2)] 
     for i in range(N-2):
         for j in range(N-2):
             if i==j:
-                A[i][i]= 2*(1+g)
-            if i>0 and ((j-1)==i):
-                A[i][j]=-g
-            if ((j+1)==i):
-                A[i][j]=-g
-    return A
+                Bravo[i][i]= 2*(1+g)
+            if i>0:
+                Bravo[i][i-1]=-g
+            if i<N-3:
+                Bravo[i][i+1]=-g
+    return Bravo
 
 #Definim el vector b
 def calcul_b(v, g, dt, tau):
@@ -46,22 +46,25 @@ t_a=0.025
 p=np.ones(2)
 for i in range(2): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza la simulació.
 
+A=[calcul_A(gamma[0]), calcul_A(gamma[1])]
+
+
 foxtrot=[[],[]] #Llista formada per dues llistes que contindran les temperatures en les diferents posicions. Nom aleatori.
 for o in range(2):
     phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
     v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        u, total=gs(calcul_A(gamma[o]), gamma[o], v, calcul_b(v, delta_z, gamma[o], tau), N, 0.1) #Apliquem el mètode de gauss-seidel
-        for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
+        v, total=gs(A[o], gamma[o], v, calcul_b(v, gamma[o], delta_t[o], tau), N, 0.01) #Apliquem el mètode de gauss-seidel
+        # for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
-    for i in range(len(foxtrot[o])):
+    for i in range(2):
         foxtrot[o][i]=(foxtrot[o][i]*const.T_0)-273.15 #Canviem la llista a temperatures no normalitzades.
 
 x=np.linspace(0, const.L_0, N) #Definim l'eix x de la gràfica
 
 Temp_1, Temp_2= foxtrot #Assignem els valors de cada temperatura a una llista corresponent.
-Temp_real=sa.sol_analít(delta_z, N,t_a, 0.00001) #Llista per calcular la temperatura a partir de la funció analítica.
+Temp_real=sa.sol_analít(delta_z, N,t_a, 0.0001) #Llista per calcular la temperatura a partir de la funció analítica.
 for i in range(N):
     Temp_real[i]=Temp_real[i]-273.15 #Temperatura a cada punt del mallat segons la solució analítica
 
