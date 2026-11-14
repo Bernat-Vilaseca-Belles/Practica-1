@@ -6,7 +6,16 @@ import constants as const
 import math
 from gauss_seidel import gauss_seidel as gs
 
-fitxer=open("Matriu_A.txt", "w")
+ee = np.genfromtxt('Temperatura_ee.csv', delimiter=';', filling_values=np.nan)
+ei = np.genfromtxt('Temperatura_ei.csv', delimiter=';', filling_values=np.nan)
+ee_T1=ee[0,:]
+ee_T2=ee[1,:]
+ee_T3=ee[2,:]
+
+ei_T1=ei[0,:]
+ei_T2=ei[1,:]
+
+
 
 #Definim la matriu A
 def calcul_A(g):
@@ -75,7 +84,7 @@ for i in range(N):
 # E_1=E_1/N #Es normalitza l'error 1
 # E_2=E_2/N #Normalització de l'error 2
 
-#Gràfic.
+#Gràfic
 plt.figure(figsize=(16,6))
 plt.subplot(1,2,1)
 plt.scatter(x, Temp_1, color='g', s=2, label=rf"Discretització $\Delta \tilde t = (\Delta \tilde z)^2$")
@@ -83,7 +92,7 @@ plt.scatter(x, Temp_2, color='b', s=2, label=rf"Discretització $\Delta \tilde t
 plt.scatter(x, Temp_real, color='k', s=3, label=rf"Funció real")
 plt.xlabel(r"$\Delta z$ (m)")
 plt.ylabel(r"$T$ ($^\circ $C)")
-plt.title(r"Mètode d'Euler implícit.")
+plt.title(r"Mètode de Crack-Nicolson")
 plt.legend(loc='best')
 
 plt.subplot(1,2,2)
@@ -91,6 +100,70 @@ plt.scatter(x, E_1, color='g', s=2, label=rf"Error de $\Delta \tilde t = (\Delta
 plt.scatter(x, E_2, color='b', s=2, label=rf"Error de $\Delta \tilde t = 0.5(\Delta \tilde z)^2$")
 plt.xlabel(r"$\Delta z$ (m)")
 plt.ylabel(r"Error normalitzat")
-plt.title(r"Errors del mètode d'Euler implícit.")
+plt.title(r"Errors del mètode de Crack-Nicolson")
+plt.legend(loc='best')
+plt.show()
+
+
+"""
+Ara farem el gràfic on comparem tots els altres mètodes respecte aquest mètode amb la
+discretització de delta t=0.5 (delta z)**2
+"""
+###Euler explícit
+Err_11, Err_12, Err_13=np.ones(N), np.ones(N), np.ones(N)
+for i in range(N):
+    Err_11[i]=abs(ee_T1[i]- Temp_2[i])/Temp_2[i]
+    Err_12[i]=abs(ee_T2[i]- Temp_2[i])/Temp_2[i]
+    Err_13[i]=abs(ee_T3[i]- Temp_2[i])/Temp_2[i]
+
+##Euler implícit
+Err_21, Err_22=np.ones(N), np.ones(N)
+for i in range(N):
+    Err_21[i]=abs(ei_T1[i]- Temp_2[i])/Temp_2[i]
+    Err_22[i]=abs(ei_T2[i]- Temp_2[i])/Temp_2[i]
+
+plt.figure(figsize=(16,6))
+plt.subplot(1,2,1)
+plt.scatter(x, ee_T1, marker='o', color='g', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.51 \,(\Delta \tilde z)^2$")
+plt.scatter(x, ee_T2, marker='o', color='b', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.49 \, (\Delta \tilde z)^2$")
+plt.scatter(x, ee_T3, marker='o', color="purple", s=2, label=fr"Euler explícit amb $\Delta \hat t=0.25 \,(\Delta \hat z)^2$")
+plt.scatter(x, Temp_2, color='k', s=3, label=rf"Crack-Nickolson amb $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
+plt.xlabel(r"$z$ (m)")
+plt.ylabel(r"$T$ ($^\circ $C)")
+plt.legend(loc="best")
+plt.yscale('log')
+plt.title(r"Comparació Euler explícit amb Crack-Nicolson")
+plt.legend(loc='best')
+
+plt.subplot(1,2,2)
+plt.scatter(x, Err_11, color='g', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.51 \, (\Delta \tilde z)^2$")
+plt.scatter(x, Err_12, color='b', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.49 \, (\Delta \tilde z)^2$")
+plt.scatter(x, Err_13, color='purple', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.25 \,(\Delta \tilde z)^2$")
+plt.xlabel(r"$\Delta z$ (m)")
+plt.ylabel(r"Error normalitzat")
+plt.title(r"Errors del mètode d'Euler explícit comparat amb Crack Nicolson")
+plt.yscale('log')
+plt.legend(loc='best')
+plt.show()
+
+##Gràfics Euler implícit
+
+plt.figure(figsize=(16,6))
+plt.subplot(2,2,1)
+plt.scatter(x, ei_T1, marker='o', color='r', s=2, label=rf"Euler explícit amb $\Delta \tilde t =(\Delta \tilde z)^2$")
+plt.scatter(x, ei_T2, marker='o', color='indigo', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
+plt.scatter(x, Temp_2, color='k', s=3, label=rf"Crack-Nickolson amb $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
+plt.xlabel(r"$z$ (m)")
+plt.ylabel(r"$T$ ($^\circ $C)")
+plt.legend(loc="best")
+plt.title(r"Comparació Euler explícit amb Crack-Nicolson")
+plt.legend(loc='best')
+
+plt.subplot(2,2,2)
+plt.scatter(x, Err_21, color='r', s=2, label=rf"Euler explícit amb $\Delta \tilde t=  (\Delta \tilde z)^2$")
+plt.scatter(x, Err_22, color='indigo', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
+plt.xlabel(r"$\Delta z$ (m)")
+plt.ylabel(r"Error normalitzat")
+plt.title(r"Errors del mètode d'Euler explícit comparat amb Crack Nicolson")
 plt.legend(loc='best')
 plt.show()

@@ -3,6 +3,7 @@ import math
 import constants as const
 import matplotlib.pyplot as plt
 import solucio_analitica as sa
+import csv
 """
 En aquest codi s'ha calculat respecte a les funcions normalitzades. 
 A raó d'això, cal tenir en compte els valors dels coeficients de normalització.
@@ -78,7 +79,7 @@ plt.xlabel(r"$z$ (m)")
 plt.ylabel(r"$T$ ($^\circ $C)")
 plt.legend(loc="best")
 plt.yscale('log')
-plt.title(r"Mètode d'Euler implícit.")
+plt.title(r"Mètode d'Euler explícit")
 plt.legend(loc='best')
 
 plt.subplot(1,2,2)
@@ -87,7 +88,13 @@ plt.scatter(x, E_2, color='b', s=2, label=rf"Error de $\Delta \tilde t = 0.5(\De
 plt.scatter(x, E_3, color='purple', s=2, label=rf"Error de $\Delta \tilde t = 0.25 (\Delta \tilde z)^2$")
 plt.xlabel(r"$z$ (m)")
 plt.ylabel(r"Error normalitzat")
-plt.title(r"Errors del mètode d'Euler implícit.")
+plt.title(r"Errors del mètode d'Euler explícit")
 plt.yscale('log')
 plt.legend(loc='best')
 plt.show()
+
+with open('Temperatura_ee.csv', 'w', newline='')as csvfile:
+    funció= csv.writer(csvfile, delimiter=';')
+    funció.writerow(Temp_1)
+    funció.writerow(Temp_2)
+    funció.writerow(Temp_3)

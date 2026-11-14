@@ -4,13 +4,14 @@ import solucio_analitica as sa
 import constants as const
 import math
 from gauss_seidel import gauss_seidel as gs
+import csv
 
 #Definició del vector sortida (S'aplica més endevant)
 def calcul_b(vector, dz, g, tau): #Llistat de temperatura normalitzada de la iteració anterior excloent els extrems, interval de z, gamma, temperatura inicial normalitzada
     b=np.ones(N-2) #Definició del vector corresponent de Ax=b
     for i in range(N-2): b[i]=g*(dz**2)+vector[i] #Assignem els valors de b
-    b[0]+=2*g*tau #Com que és el valor de j=2 i no està definida la operació per a j=1, cal afegir-hi el valor esctremal
-    b[N-3]+=2*g*tau #Afegim el valor extremal de la temperatura per a j=N
+    b[0]+=g*tau #Com que és el valor de j=2 i no està definida la operació per a j=1, cal afegir-hi el valor esctremal
+    b[N-3]+=g*tau #Afegim el valor extremal de la temperatura per a j=N
     return b
 
 #Càlcul de les variables necessàries.:
@@ -43,7 +44,7 @@ for o in range(2):
     phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
     v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        u, total=gs(A[o], gamma[o], v, calcul_b(v, delta_z, gamma[o], tau), N, 0.001) #Apliquem el mètode de gauss-seidel
+        u, total=gs(A[o], gamma[o], v, calcul_b(v, delta_z, gamma[o], tau), N, 0.00001) #Apliquem el mètode de gauss-seidel
         for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
@@ -83,3 +84,8 @@ plt.ylabel(r"Error normalitzat")
 plt.title(r"Errors del mètode d'Euler implícit.")
 plt.legend(loc='best')
 plt.show()
+
+with open('Temperatura_ei.csv', 'w', newline='')as csvfile:
+    funció= csv.writer(csvfile, delimiter=';')
+    funció.writerow(Temp_1)
+    funció.writerow(Temp_2)
