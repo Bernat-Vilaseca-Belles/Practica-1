@@ -24,7 +24,7 @@ def calcul_A(g):
 #Definim el vector b
 def calcul_b(v, g, dt, tau):
     b1 = 2*(1-g)*v[0] + g*v[1] + 2*dt + g*tau
-    bn = g*v[-1] + 2*(1-g)*v[-2] + 2*dt + g*tau
+    bn = g*v[-2] + 2*(1-g)*v[-1] + 2*dt + g*tau
     br = np.zeros(N-4)
     for i in range(N-4):
         br[i]= g*v[i] + 2*(1-g)*v[i+1] + g*v[i+2] + 2*dt
