@@ -10,7 +10,7 @@ from gauss_seidel import gauss_seidel as gs
 
 #Definim la matriu A
 def calcul_A(g):
-    Bravo=[np.zeros(N-2) for _ in range(N-2)] 
+    A = [np.zeros(N-2) for _ in range(N-2)]
     for i in range(N-2):
         for j in range(N-2):
             if i==j:
@@ -24,7 +24,7 @@ def calcul_A(g):
 #Definim el vector b
 def calcul_b(v, g, dt, tau):
     b1 = 2*(1-g)*v[0] + g*v[1] + 2*dt + g*tau
-    bn = g*v[-1] + 2*(1-g)*v[-2] + 2*dt + g*tau
+    bn = g*v[-2] + 2*(1-g)*v[-1] + 2*dt + g*tau
     br = np.zeros(N-4)
     for i in range(N-4):
         br[i]= g*v[i] + 2*(1-g)*v[i+1] + g*v[i+2] + 2*dt
@@ -54,8 +54,8 @@ for o in range(2):
     phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
     v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        v, total=gs(A[o], gamma[o], v, calcul_b(v, gamma[o], delta_t[o], tau), N, 0.01) #Apliquem el mètode de gauss-seidel
-        # for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
+        u, total=gs(calcul_A(gamma[o]), gamma[o], v, calcul_b(v, gamma[o], delta_t[o], tau), N, 1) #Apliquem el mètode de gauss-seidel
+        for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
     for i in range(2):
