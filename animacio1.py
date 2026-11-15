@@ -1,6 +1,9 @@
 import numpy as np
 from constants import T_c,T_0
+import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from matplotlib.patches import Rectangle
 import constants as const
 import math
 from gauss_seidel import gauss_seidel as gs
@@ -24,12 +27,11 @@ def color_T(T_a,T_b,T_1,T_2,T_3):
     T=(T_b+T_a)/2
     col=[0,0,0]
     if T<=T_2:
-        col[0]=135+(120*T/d_1)
-        col[1]=206-(206*T/d_1)
-        col[2]=235-(235*T/d_1)
+        col[0]=(195-(60*(T_1+T_2)/(d_1)))+(120*T/d_1)
+        col[1]=(206*T_2/d_1)-(206*T/d_1)
+        col[2]=(235*T_2/d_1)-(235*T/d_1)
     if (T>T_2) and (T<=T_3):
-        col[0]=255-(255*T/d_2)
-    print(col)
+        col[0]=(255*T_3/d_2)-(255*T/d_2)
     return (col[0]/255.0,col[1]/255.0,col[2]/255.0)
 
 #Càlcul de les variables necessàries.:
@@ -67,18 +69,13 @@ v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors
 b_1=True #No s'ha superat la temperatura de 80ºc. Boolean 1
 b_2=True #Fora de l'interval no s'ha superat la temperatura de 50ªC. Boolean 2
 comptador=0
+n=0
+frames=[]
+temps=[]
 
-plt.figure(figsize=(16,9))
-# creem els requadres on pintarem l'animació
-X, Y=[], []
+fig, ax = plt.subplots(figsize=(16, 9))
 
-for i in range(N-1):
-    london=(i*delta_z*const.L_0, (i+1)*delta_z*const.L_0, (i+1)*delta_z*const.L_0, i*delta_z*const.L_0) #En x
-    paris=(0,0,1,1) #Eix y
-    X.append(london)
-    Y.append(paris)
 
-x=np.linspace(0, const.L_0, N) #Definim l'eix x de la gràfica
 while b_1 and b_2:
     v, total=gs(A, gamma, v, calcul_b(v, gamma, delta_t, tau), N, 0.0000000001) #Apliquem el mètode de gauss-seidel
     # for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
@@ -92,21 +89,56 @@ while b_1 and b_2:
         comptador+=1
     foxtrot=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot=np.append(np.array(foxtrot), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
+    frames.append(foxtrot)
+    temps.append(n*delta_t*const.t_0)
     #posem el color a l'animació
-    plt.cla()
-    plt.vlines(x[j_1], ymin= 0, ymax=1, colors='k')
-    plt.vlines(x[j_2], ymin= 0, ymax=1, colors='k')
+    ax.clear()
+    
 
-    for i in range(N-1):
-        plt.fill(X[i],Y[i],color=color_T(foxtrot[i],foxtrot[i+1],tau,T_1,T_2))
-    plt.xlabel(r"$\Delta z$ (m)")
-    plt.ylabel(r"$T$ ($^\circ $C)")
-    plt.title(r"Solució del problema")
-    plt.legend(loc='best')
-    plt.pause(delta_t*const.t_0)
+    # for i in range(N-1):
+    #     # print(foxtrot[i])
+    #     # print(foxtrot[i+1])
+    #     # print(color_T(foxtrot[i],foxtrot[i+1],tau,T_1,T_2))
+    #     ax.fill(X[i],Y[i], color=color_T(foxtrot[i],foxtrot[i+1],tau,T_1,T_2))
+    n+=1
+
+    
+
+    # plt.pause(0.1)
 # print("Temps d'exposició: ", (comptador*delta_t*const.t_0))
 
+x=np.linspace(0, const.L_0, N) #Definim l'eix x de la gràfica
 
+
+ax.axvline(x[j_1], ymin= 0, ymax=1, color='black')
+ax.axvline(x[j_2], ymin= 0, ymax=1, color='black')
+ax.set_xlim(0,const.h)
+ax.set_ylim(0,1)
+ax.set_xlabel(r"$\Delta z$ (m)")
+ax.set_title(r"Animació del problema")
+
+rectangle = []
+for i in range(N - 1):
+    rect = Rectangle((i * delta_z * const.L_0, 0),
+                     delta_z * const.L_0, 1,
+                     edgecolor='none')
+    ax.add_patch(rect)
+    rectangle.append(rect)
+
+nombre_temps = ax.text(0.001, 0.9, "")
+
+def update(frame_idz):
+    echo = frames[frame_idz]
+    for i in range(N - 1): rectangle[i].set_facecolor(color_T(echo[i], echo[i + 1], tau, T_1, T_2))
+    nombre_temps.set_text(f"t={np.round(temps[frame_idz], 3)} s")
+    return rectangle + [nombre_temps]
+
+
+anim = FuncAnimation(fig, update,
+                     frames=len(frames),
+                     interval=delta_t*const.t_0,
+                     blit=False,          # blit=True amb patches a vegades dóna artefactes
+                     repeat=False)
 plt.show()
 
 
