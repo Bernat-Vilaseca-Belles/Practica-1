@@ -24,7 +24,7 @@ delta_t= ((delta_z**2), 0.5*(delta_z**2)) #Conjunt de valors de les diferents di
 gamma= [1,0.5] #coficient
 t_a=0.025
 p=np.ones(2)
-for i in range(2): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza la simulació.
+for i in range(2): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza la simulació per a cada discretització.
 
 #Definim la Matriu A
 A=[] #Com que tenim dues gammes, tindrem dues matrius. Per tant. Definim A com la llista de les dues matrius.
@@ -85,6 +85,9 @@ plt.title(r"Errors del mètode d'Euler implícit.")
 plt.legend(loc='best')
 plt.show()
 
+"""
+Obrim un document .csv per poder fer la comperativa amb el mètode de Crank-Nicolson.
+"""
 with open('Temperatura_ei.csv', 'w', newline='')as csvfile:
     funció= csv.writer(csvfile, delimiter=';')
     funció.writerow(Temp_1)

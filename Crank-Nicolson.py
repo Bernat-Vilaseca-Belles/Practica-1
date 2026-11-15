@@ -6,36 +6,36 @@ import constants as const
 import math
 from gauss_seidel import gauss_seidel as gs
 
-ee = np.genfromtxt('Temperatura_ee.csv', delimiter=';', filling_values=np.nan)
-ei = np.genfromtxt('Temperatura_ei.csv', delimiter=';', filling_values=np.nan)
-ee_T1=ee[0,:]
-ee_T2=ee[1,:]
-ee_T3=ee[2,:]
+ee = np.genfromtxt('Temperatura_ee.csv', delimiter=';', filling_values=np.nan) #Importem el document amb la llista de temperatures del mètode d'Euler explícit.
+ei = np.genfromtxt('Temperatura_ei.csv', delimiter=';', filling_values=np.nan) #Importem el document amb la llista de temperatures del mètode d'Euler implícit.
+ee_T1=ee[0,:] #Primera discretzació de l'Euler explícit.
+ee_T2=ee[1,:] #Segona discretzació de l'Euler explícit.
+ee_T3=ee[2,:] #Tercera discretzació de l'Euler explícit.
 
-ei_T1=ei[0,:]
-ei_T2=ei[1,:]
+ei_T1=ei[0,:] #Primera discretzació de l'Euler implícit.
+ei_T2=ei[1,:] #Segona discretzació de l'Euler implícit.
 
 
 
-#Definim la matriu A
+#Definim la matriu A. No li donem el nom de A, perquè tenim dues gammes i, per tant, A serà la llista de les dues matrius.
 def calcul_A(g):
-    Bravo = [np.zeros(N-2) for _ in range(N-2)]
+    Bravo = [np.zeros(N-2) for _ in range(N-2)] #Es crea una matriu de (N-2)x(N-2) plena de zeros.
     for i in range(N-2):
         for j in range(N-2):
-            if i==j:
+            if i==j: #Diagonal
                 Bravo[i][i]= 2*(1+g)
-            if i>0:
+            if i>0: #Valors de sota la diagonal. No agafem a la primera fila, perquè no hi ha terme. El tenim en compte en el càlcul de la b.
                 Bravo[i][i-1]=-g
-            if i<N-3:
+            if i<N-3: #Valors de sobre la diagonal. No agafem l'últim valor, perquè no existeix en la matriu. El tenim en compte en la b.
                 Bravo[i][i+1]=-g
     return Bravo
 
-#Definim el vector b
+#Definim el vector b. A cada iteració es torna a calcular la b. 
 def calcul_b(v, g, dt, tau):
-    b=np.ones(N-2)
-    deca=2*(1-g)
-    golf=2*dt
-    for i in range(1, N-3):
+    b=np.ones(N-2) #Fem un vector de N-2 components.
+    deca=2*(1-g) #Ho definim per estalviar-nos operacions
+    golf=2*dt #Ho definim per estalviar-nos operacions.
+    for i in range(1, N-3): #Només tenim en compte els termes que no siguin extrems. Els altres els hem de comptar a part, perquè hem de comptar els termes que hem deixat fora de la A.
         b[i]=g*v[i-1]+deca*v[i]+ g*v[i+1] + golf
     b[0] = 2*g*tau+ deca*v[0] + g*v[1] + golf
     b[N-3] = g*v[N-4] + deca*v[N-3] + 2*g*tau + golf 
@@ -50,11 +50,11 @@ N=101
 delta_z = 1/(N-1) #valor de la discretització espacial normalitzada. delta_z'= h/(L_0*N). L_0=h ==> delta_z'=1/N.
 delta_t= ((delta_z**2), 0.5*(delta_z**2)) #Conjunt de valors de les diferents discretitzacions temporals.
 gamma= [1,0.5] #coficient
-t_a=0.025
+t_a=0.025 #Límit del temps normalitzat que s'aplica el mètode.
 p=np.ones(2)
-for i in range(2): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza la simulació.
+for i in range(2): p[i]=math.floor(t_a/delta_t[i]) #Límit fins a on es realitza la simulació per a cada gamma.
 
-A=[calcul_A(gamma[0]), calcul_A(gamma[1])]
+A=[calcul_A(gamma[0]), calcul_A(gamma[1])] #Llista de les matrius A.
 
 
 
@@ -77,14 +77,14 @@ Temp_real=sa.sol_analít(delta_z, N,t_a, 0.0001) #Llista per calcular la tempera
 for i in range(N):
     Temp_real[i]=Temp_real[i]-273.15 #Temperatura a cada punt del mallat segons la solució analítica
 
-E_1, E_2=np.ones(N), np.ones(N) #Errors de cada solució
+E_1, E_2=np.ones(N), np.ones(N) #Es calculen els errors de cada punt i es posa coma llista.
 for i in range(N):
-    E_1[i]=abs(Temp_1[i]- Temp_real[i])/Temp_real[i] #Es calcula la suma dels errors de cada punt del mallat de la solució 1.
-    E_2[i]=abs(Temp_2[i]- Temp_real[i])/Temp_real[i] #Suma errors solució 2.
-# E_1=E_1/N #Es normalitza l'error 1
-# E_2=E_2/N #Normalització de l'error 2
+    E_1[i]=abs(Temp_1[i]- Temp_real[i])/Temp_real[i] #solució 1
+    E_2[i]=abs(Temp_2[i]- Temp_real[i])/Temp_real[i] #solució 2.
 
-#Gràfic
+"""
+Gràfic. Aquí es mostren les dues solucions respecte a la solució exacta.
+"""
 plt.figure(figsize=(16,6))
 plt.subplot(1,2,1)
 plt.scatter(x, Temp_1, color='g', s=2, label=rf"Discretització $\Delta \tilde t = (\Delta \tilde z)^2$")
@@ -107,21 +107,23 @@ plt.show()
 
 """
 Ara farem el gràfic on comparem tots els altres mètodes respecte aquest mètode amb la
-discretització de delta t=0.5 (delta z)**2
+discretització de delta t=0.5 (delta z)**2. El metode és el mateix que hem seguit fins ara.
 """
 ###Euler explícit
-Err_11, Err_12, Err_13=np.ones(N), np.ones(N), np.ones(N)
+Err_11, Err_12, Err_13=np.ones(N), np.ones(N), np.ones(N) #Llistat d'errors del Mètode d'Euler explícit, per a cada una de les seves discretitzacions, envers al mètode de Crank-Nicolson per a la millor discretització
 for i in range(N):
     Err_11[i]=abs(ee_T1[i]- Temp_2[i])/Temp_2[i]
     Err_12[i]=abs(ee_T2[i]- Temp_2[i])/Temp_2[i]
     Err_13[i]=abs(ee_T3[i]- Temp_2[i])/Temp_2[i]
 
 ##Euler implícit
-Err_21, Err_22=np.ones(N), np.ones(N)
+Err_21, Err_22=np.ones(N), np.ones(N) #Llistat d'errors del Mètode d'Euler implícit, per a cada una de les seves discretitzacions, envers al mètode de Crank-Nicolson per a la millor discretització
 for i in range(N):
     Err_21[i]=abs(ei_T1[i]- Temp_2[i])/Temp_2[i]
     Err_22[i]=abs(ei_T2[i]- Temp_2[i])/Temp_2[i]
 
+
+#Gràfics d'Euler explícit
 plt.figure(figsize=(16,6))
 plt.subplot(1,2,1)
 plt.scatter(x, ee_T1, marker='o', color='g', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.51 \,(\Delta \tilde z)^2$")
