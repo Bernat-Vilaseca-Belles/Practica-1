@@ -70,11 +70,9 @@ b_1=True #No s'ha superat la temperatura de 80ºc. Boolean 1
 b_2=True #Fora de l'interval no s'ha superat la temperatura de 50ªC. Boolean 2
 comptador=0
 n=0
-frames=[]
+
+fotograma=[]
 temps=[]
-
-fig, ax = plt.subplots(figsize=(16, 9))
-
 
 while b_1 and b_2:
     v, total=gs(A, gamma, v, calcul_b(v, gamma, delta_t, tau), N, 0.0000000001) #Apliquem el mètode de gauss-seidel
@@ -89,27 +87,13 @@ while b_1 and b_2:
         comptador+=1
     foxtrot=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot=np.append(np.array(foxtrot), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
-    frames.append(foxtrot)
+    fotograma.append(foxtrot)
     temps.append(n*delta_t*const.t_0)
-    #posem el color a l'animació
-    ax.clear()
-    
-
-    # for i in range(N-1):
-    #     # print(foxtrot[i])
-    #     # print(foxtrot[i+1])
-    #     # print(color_T(foxtrot[i],foxtrot[i+1],tau,T_1,T_2))
-    #     ax.fill(X[i],Y[i], color=color_T(foxtrot[i],foxtrot[i+1],tau,T_1,T_2))
     n+=1
-
-    
-
-    # plt.pause(0.1)
-# print("Temps d'exposició: ", (comptador*delta_t*const.t_0))
 
 x=np.linspace(0, const.L_0, N) #Definim l'eix x de la gràfica
 
-
+fig, ax = plt.subplots(figsize=(16, 9))
 ax.axvline(x[j_1], ymin= 0, ymax=1, color='black')
 ax.axvline(x[j_2], ymin= 0, ymax=1, color='black')
 ax.set_xlim(0,const.h)
@@ -117,29 +101,22 @@ ax.set_ylim(0,1)
 ax.set_xlabel(r"$\Delta z$ (m)")
 ax.set_title(r"Animació del problema")
 
+#Ara afegim un sistema per generar rectangles. S'ha tret de consultar la biblioteca de matplotlib patches i del foro StackOverflow
 rectangle = []
 for i in range(N - 1):
-    rect = Rectangle((i * delta_z * const.L_0, 0),
-                     delta_z * const.L_0, 1,
-                     edgecolor='none')
-    ax.add_patch(rect)
+    rect = Rectangle((i * delta_z * const.L_0, 0), delta_z * const.L_0, 1, edgecolor='none') #Es fa el rectangle, la biblioteca matplotlib
+    ax.add_patch(rect) #Es posa el rectangle, segons el foro StackOverflow.
     rectangle.append(rect)
 
-nombre_temps = ax.text(0.001, 0.9, "")
 
-def update(frame_idz):
-    echo = frames[frame_idz]
+nombre_temps = ax.text(0.001, 0.9, "") #Definim el temps que passa segons la bilbioteca matplotlib text.
+
+def update(frame_numero):
+    echo = fotograma[frame_numero]
     for i in range(N - 1): rectangle[i].set_facecolor(color_T(echo[i], echo[i + 1], tau, T_1, T_2))
-    nombre_temps.set_text(f"t={np.round(temps[frame_idz], 3)} s")
+    nombre_temps.set_text(f"t={np.round(temps[frame_numero], 3)} s") #Afegim el text de temps, segons exemples de la biblioteca de matplotlib text.
     return rectangle + [nombre_temps]
 
-
-anim = FuncAnimation(fig, update,
-                     frames=len(frames),
-                     interval=delta_t*const.t_0,
-                     blit=False,          # blit=True amb patches a vegades dóna artefactes
-                     repeat=False)
+#Apliquem el mètode de l'animació sogons el tutorial de Youtube i la biblioteca de matplotlib.animation.
+animació = FuncAnimation(fig, update, frames=len(fotograma), interval=delta_t*const.t_0, repeat=False)
 plt.show()
-
-
-
