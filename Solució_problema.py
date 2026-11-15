@@ -6,8 +6,6 @@ import constants as const
 import math
 from gauss_seidel import gauss_seidel as gs
 
-#Definim la matriu A
-
 
 #Definim el vector b
 def calcul_b(v, g, dt, tau):
