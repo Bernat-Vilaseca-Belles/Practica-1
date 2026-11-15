@@ -111,10 +111,10 @@ for i in range(N - 1):
 
 nombre_temps = ax.text(0.001, 0.9, "") #Definim el temps que passa segons la bilbioteca matplotlib text.
 
-def update(frame_numero):
-    echo = fotograma[frame_numero]
+def update(fotograma_numero):
+    echo = fotograma[fotograma_numero]
     for i in range(N - 1): rectangle[i].set_facecolor(color_T(echo[i], echo[i + 1], tau, T_1, T_2))
-    nombre_temps.set_text(f"t={np.round(temps[frame_numero], 3)} s") #Afegim el text de temps, segons exemples de la biblioteca de matplotlib text.
+    nombre_temps.set_text(f"t={np.round(temps[fotograma_numero], 3)} s") #Afegim el text de temps, segons exemples de la biblioteca de matplotlib text.
     return rectangle + [nombre_temps]
 
 #Apliquem el mètode de l'animació sogons el tutorial de Youtube i la biblioteca de matplotlib.animation.
