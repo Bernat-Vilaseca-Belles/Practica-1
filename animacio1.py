@@ -7,6 +7,7 @@ from matplotlib.patches import Rectangle
 import constants as const
 import math
 from gauss_seidel import gauss_seidel as gs
+import matplotlib.animation as animation
 
 """
 Aquest és el codi de l'animació del que passa. Hem utilitzat moltes parts del codi Solució_problema. Per poder realitzar
@@ -39,6 +40,7 @@ def color_T(T_a,T_b,T_1,T_2,T_3):
     if (T>T_2) and (T<=T_3):
         col[0]=(255*T_3/d_2)-(255*T/d_2)
     return (col[0]/255.0,col[1]/255.0,col[2]/255.0)
+
 
 #Càlcul de les variables necessàries.:
 tau = T_c/T_0 #Temperatura inicial normalitzada. tau=T(t=0)/T_0, T_0= k/sigma*(V_0**2).
@@ -81,7 +83,7 @@ fotograma=[phi] #Llista format de les llistes de cada iteració de les temperatu
 temps=[0] #Llista del temps que passa a cada fotograma de l'animació
 
 while b_1 and b_2:
-    v, total=gs(A, gamma, v, calcul_b(v, gamma, delta_t, tau), N, 0.0000000001) #Apliquem el mètode de gauss-seidel
+    v, total=gs(A, gamma, v, calcul_b(v, gamma, delta_t, tau), N, 10**(-12)) #Apliquem el mètode de gauss-seidel
     # for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     u=v[j_1:j_2] #Conjunt de punts dins de la zona malalta amb la seva temperatura.
     w=np.append(v[:(j_1-1)], v[(j_2+1):]) #Conjunt de punts fora de la zona malalta amb la seva temperatura.
@@ -125,4 +127,4 @@ def update(fotograma_numero):
 
 #Apliquem el mètode de l'animació sogons el tutorial de Youtube i la biblioteca de matplotlib.animation.
 animació = FuncAnimation(fig, update, frames=len(fotograma), interval=delta_t*const.t_0, repeat=False)
-plt.show()
+animació.save('Videoanimacio.gif', writer=animation.PillowWriter(fps=len(fotograma)))

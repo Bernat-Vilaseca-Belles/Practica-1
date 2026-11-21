@@ -9,11 +9,11 @@ def sol_analít(dz, N, t, error):
     b_1=True #No convergent
     while b_1:
         for i in range(N):
-            vector[i]+=T_0*(4*((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
-                                        /(((2*n+1)**3)*(np.pi**3)))*np.sin((2*n+1)*np.pi*(i*dz)))
+            vector[i]+=T_0*4*((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
+                                        /(((2*n+1)**3)*(np.pi**3)))*np.sin((2*n+1)*np.pi*(i*dz))
             if n>1:
-                E[i]=abs(T_0*(4*((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
-                                 /(((2*n+1)**3)*(np.pi**3)))*np.sin((2*n+1)*np.pi*(i*dz))))/vector[i]
+                E[i]=abs(((1-np.exp(-((2*n+1)**2)*(np.pi**2)*t))
+                                 /(((2*n+1)**3)*(np.pi**3)))*np.sin(((2*n)+1)*np.pi*(i*dz)))/vector[i]
         if max(E)<=error:
             b_1=False
         n+=1

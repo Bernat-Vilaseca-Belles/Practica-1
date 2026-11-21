@@ -57,9 +57,10 @@ phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
 v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors
 b_1=True #No s'ha superat la temperatura de 80ºc. Boolean 1
 b_2=True #Fora de l'interval no s'ha superat la temperatura de 50ªC. Boolean 2
-comptador=0
+comptador_1=0
+comptador_2=0
 while b_1 and b_2:
-    v, total=gs(A, gamma, v, calcul_b(v, gamma, delta_t, tau), N, 0.0000000001) #Apliquem el mètode de gauss-seidel
+    v, total=gs(A, gamma, v, calcul_b(v, gamma, delta_t, tau), N, 10**(-12)) #Apliquem el mètode de gauss-seidel
     u=v[j_1:j_2] #Llistat de temperatures dins de la regió malalta.
     w=np.append(v[:(j_1-1)], v[(j_2+1):]) #Llistat de temperatures fora de la regió malalta.
     if (max(v)>T_2): #Si la temperatura a quasevol punt és major a 80ºC
@@ -67,8 +68,10 @@ while b_1 and b_2:
     if (max(w)>T_1): #Si fora de la regió malalta algun punt arriba als 50ºC.
         b_2=False
     if b_1 and (max(u)>T_1): #Comptem quan temps passa la regió malalta per sobre dels 50ºC.
-        comptador+=1
-print("Temps d'exposició: ", (comptador*delta_t*const.t_0))
+        comptador_1+=1
+    comptador_2+=1
+print("Temps d'exposició: ", (comptador_1*delta_t*const.t_0))
+print("Temps amb la màquina engegada: ", (comptador_2*delta_t*const.t_0))
 foxtrot=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
 foxtrot=np.append(np.array(foxtrot), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
 for i in range(len(foxtrot)):

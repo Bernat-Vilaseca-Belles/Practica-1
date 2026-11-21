@@ -43,7 +43,7 @@ Temp_3=calcul_temperatura(tau, delta_z, N, p[2], gamma[2]) #Temperatura per a la
 x=np.linspace(0, const.L_0, N) #Definim l'eix x de la gràfica
 
 Temp_real=np.ones(N) #Llista per calcular la temperatura a partir de la funció analítica.
-Temp_real=sa.sol_analít(delta_z, N,t_a, 0.00001) #Llista per calcular la temperatura a partir de la funció analítica.
+Temp_real=sa.sol_analít(delta_z, N,t_a, 10**(-11)) #Llista per calcular la temperatura a partir de la funció analítica.
 for i in range(N):
     Temp_real[i]=Temp_real[i]-273.15 #Temperatura a cada punt del mallat segons la solució analítica
 
@@ -56,8 +56,8 @@ for i in range(N):
 #Gràfics de la representació de la funció i del seu error
 plt.figure(figsize=(16,6))
 plt.subplot(1,2,1)
-plt.scatter(x, Temp_1, marker='o', color='g', s=2, label=rf"Discretització $\Delta \tilde t = (\Delta \tilde z)^2$")
-plt.scatter(x, Temp_2, marker='o', color='b', s=2, label=rf"Discretització $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
+plt.scatter(x, Temp_1, marker='o', color='g', s=2, label=rf"Discretització $\Delta \tilde t = 0.51 (\Delta \tilde z)^2$")
+plt.scatter(x, Temp_2, marker='o', color='b', s=2, label=rf"Discretització $\Delta \tilde t = 0.49 \, (\Delta \tilde z)^2$")
 plt.scatter(x, Temp_3, marker='o', color="purple", s=2, label=fr"Discretització $\Delta \hat t=0.25 (\Delta \hat z)^2$")
 plt.scatter(x, Temp_real, color='k', s=3, label=rf"Funció real")
 plt.xlabel(r"$z$ (m)")
@@ -68,8 +68,8 @@ plt.title(r"Mètode d'Euler explícit")
 plt.legend(loc='best')
 
 plt.subplot(1,2,2)
-plt.scatter(x, E_1, color='g', s=2, label=rf"Error de $\Delta \tilde t = (\Delta \tilde z)^2$")
-plt.scatter(x, E_2, color='b', s=2, label=rf"Error de $\Delta \tilde t = 0.5(\Delta \tilde z)^2$")
+plt.scatter(x, E_1, color='g', s=2, label=rf"Error de $\Delta \tilde t = 0.51 (\Delta \tilde z)^2$")
+plt.scatter(x, E_2, color='b', s=2, label=rf"Error de $\Delta \tilde t = 0.49 (\Delta \tilde z)^2$")
 plt.scatter(x, E_3, color='purple', s=2, label=rf"Error de $\Delta \tilde t = 0.25 (\Delta \tilde z)^2$")
 plt.xlabel(r"$z$ (m)")
 plt.ylabel(r"Error normalitzat")

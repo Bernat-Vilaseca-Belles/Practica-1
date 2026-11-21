@@ -63,7 +63,7 @@ for o in range(2):
     phi=tau*np.ones(N) # Assignem la temperatura normalitzada com a llista.
     v=phi[1:N-1] #Agafem tots els valors de T que no siguin els valors 
     for j in range(int(p[o])):
-        u, total=gs(A[o], gamma[o], v, calcul_b(v, gamma[o], delta_t[o], tau), N, 0.00001) #Apliquem el mètode de gauss-seidel
+        u, total=gs(A[o], gamma[o], v, calcul_b(v, gamma[o], delta_t[o], tau), N, 10**(-12)) #Apliquem el mètode de gauss-seidel
         for k in range(N-2): v[k]=u[k] #Reescribim els valors de v.
     foxtrot[o]=np.append(np.array([phi[0]]), np.array(v)) #Posem el valor de la temperatura a z=0 al començament de la llista.
     foxtrot[o]=np.append(np.array(foxtrot[o]), np.array([phi[-1]])) #Posem el valor de la temperatua a z=h al final de la llista.
@@ -73,7 +73,7 @@ for o in range(2):
 x=np.linspace(0, const.L_0, N) #Definim l'eix x de la gràfica
 
 Temp_1, Temp_2= foxtrot #Assignem els valors de cada temperatura a una llista corresponent.
-Temp_real=sa.sol_analít(delta_z, N,t_a, 0.0001) #Llista per calcular la temperatura a partir de la funció analítica.
+Temp_real=sa.sol_analít(delta_z, N,t_a, 10**(-11)) #Llista per calcular la temperatura a partir de la funció analítica.
 for i in range(N):
     Temp_real[i]=Temp_real[i]-273.15 #Temperatura a cada punt del mallat segons la solució analítica
 
@@ -158,7 +158,7 @@ plt.scatter(x, Temp_2, color='k', s=3, label=rf"Crank-Nickolson amb $\Delta \til
 plt.xlabel(r"$z$ (m)")
 plt.ylabel(r"$T$ ($^\circ $C)")
 plt.legend(loc="best")
-plt.title(r"Comparació Euler explícit amb Crack-Nicolson")
+plt.title(r"Comparació Euler implícit amb Crack-Nicolson")
 plt.legend(loc='best')
 
 plt.subplot(1,2,2)
@@ -166,6 +166,6 @@ plt.scatter(x, Err_21, color='r', s=2, label=rf"Euler explícit amb $\Delta \til
 plt.scatter(x, Err_22, color='indigo', s=2, label=rf"Euler explícit amb $\Delta \tilde t = 0.5 \, (\Delta \tilde z)^2$")
 plt.xlabel(r"$\Delta z$ (m)")
 plt.ylabel(r"Error normalitzat")
-plt.title(r"Errors del mètode d'Euler explícit comparat amb Crank Nicolson")
+plt.title(r"Errors del mètode d'Euler implícit comparat amb Crank Nicolson")
 plt.legend(loc='best')
 plt.show()
