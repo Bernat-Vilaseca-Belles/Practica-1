@@ -97,7 +97,7 @@ plt.hlines(y=50, xmin=0, xmax=const.h, linewidths=0.8, colors='k')
 plt.fill(X_1, Y_1, color='skyblue', alpha=0.5, label="zona sana") #Emplenem el rectangle de la regió sana.
 plt.fill(X_2, Y_2, color='red', alpha=0.3, label="zona malalta") #Emplenem el recuadre de la regió malalta.
 plt.fill(X_3, Y_3, color='skyblue', alpha=0.5) #Emplenem el recuadre de l'altra regió sana.
-plt.xlabel(r"$\Delta z$ (m)")
+plt.xlabel(r"$z$ (m)")
 plt.ylabel(r"$T$ ($^\circ $C)")
 plt.title(r"Solució del problema")
 plt.legend(loc='best')

@@ -106,7 +106,7 @@ ax.axvline(x[j_1], ymin= 0, ymax=1, color='black') #Dibuixem la línia on comen�
 ax.axvline(x[j_2], ymin= 0, ymax=1, color='black') #Dibuixem la línia on acaba la zona malalta.
 ax.set_xlim(0,const.h) #La longitud de l'eix x és l'amplada de la zona on apliquem l'operació quirúrgica.
 ax.set_ylim(0,1) #Aquest eix no té sentit físic. Només és per dibuixar una secció de la zona quirúrgica.
-ax.set_xlabel(r"$\Delta z$ (m)")
+ax.set_xlabel(r"$z$ (m)")
 ax.set_title(r"Animació del problema")
 
 #Ara afegim un sistema per generar rectangles. S'ha tret de consultar la biblioteca de matplotlib patches i del foro StackOverflow
