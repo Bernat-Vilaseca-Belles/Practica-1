@@ -11,7 +11,7 @@ import matplotlib.animation as animation
 
 """
 Aquest és el codi de l'animació del que passa. Hem utilitzat moltes parts del codi Solució_problema. Per poder realitzar
-les animacions hem cercat en diferents foros de StackOverflow i les biblioteques de matplotlib de pyplot, patches i animation.
+les animacions hem cercat en diferents fòrums de StackOverflow i les biblioteques de matplotlib de pyplot, patches i animation.
 També hem consultat dos tutorials de Youtube sobre com utilitzar el recurç Function Animation. Tot això es troba a la bibliografia
 de l'informe.
 """
@@ -109,11 +109,11 @@ ax.set_ylim(0,1) #Aquest eix no té sentit físic. Només és per dibuixar una s
 ax.set_xlabel(r"$z$ (m)")
 ax.set_title(r"Animació del problema")
 
-#Ara afegim un sistema per generar rectangles. S'ha tret de consultar la biblioteca de matplotlib patches i del foro StackOverflow
+#Ara afegim un sistema per generar rectangles. S'ha tret de consultar la biblioteca de matplotlib patches i del fòrum StackOverflow
 rectangle = []
 for i in range(N - 1):
     rect = Rectangle((i * delta_z * const.L_0, 0), delta_z * const.L_0, 1, edgecolor='none') #Es fa el rectangle, la biblioteca matplotlib
-    ax.add_patch(rect) #Es posa el rectangle, segons el foro StackOverflow.
+    ax.add_patch(rect) #Es posa el rectangle, segons el fòrum StackOverflow.
     rectangle.append(rect)
 
 
