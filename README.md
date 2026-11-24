@@ -20,6 +20,8 @@ A continuació es relata qui és l'autor o els autors de cada part.
 - Animació: Joel Serrano i Bernat Vilaseca.
 - Càlculs: Javier Álvarez i Joel Serrano (amb contribució de Bernat Vilaseca).
 
+Molts dels codis que s'han fet conjuntament s'han fet des de l'ordinador portàtil de Bernat Vilaseca, ja que té més potència de computació.
+
 ## Què conté aquest repositori?
 Els continguts es llisten a continuació:
 - CN.png: El gràfic resultant d'utilitzar el mètode de Crank-Nicolson.
